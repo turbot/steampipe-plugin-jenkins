@@ -20,6 +20,7 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 		},
 		TableMap: map[string]*plugin.Table{
 			"jenkins_job":    tableJenkinsJob(),
+			"jenkins_node":   tableJenkinsNode(),
 			"jenkins_plugin": tableJenkinsPlugin(),
 		},
 	}
