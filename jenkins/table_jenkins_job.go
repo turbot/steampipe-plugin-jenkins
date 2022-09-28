@@ -15,7 +15,7 @@ import (
 func tableJenkinsJob() *plugin.Table {
 	return &plugin.Table{
 		Name:        "jenkins_job",
-		Description: "A job is a runnable entity on Jenkins.",
+		Description: "A user-configured description of work which Jenkins should perform, such as building a piece of software, etc.",
 		List: &plugin.ListConfig{
 			Hydrate: listJenkinsJobs,
 			KeyColumns: plugin.KeyColumnSlice{

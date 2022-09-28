@@ -14,7 +14,7 @@ import (
 func tableJenkinsNode() *plugin.Table {
 	return &plugin.Table{
 		Name:        "jenkins_node",
-		Description: "A node is a runnable entity on Jenkins.",
+		Description: "A machine which is part of the Jenkins environment and capable of executing Pipelines or jobs.",
 		List: &plugin.ListConfig{
 			Hydrate: listJenkinsNodes,
 			KeyColumns: plugin.KeyColumnSlice{

@@ -15,7 +15,7 @@ import (
 func tableJenkinsPlugin() *plugin.Table {
 	return &plugin.Table{
 		Name:        "jenkins_plugin",
-		Description: "A plugin is a runnable entity on Jenkins.",
+		Description: "An extension to Jenkins functionality provided separately from Jenkins Core.",
 		List: &plugin.ListConfig{
 			Hydrate: listJenkinsPlugins,
 			KeyColumns: plugin.KeyColumnSlice{
