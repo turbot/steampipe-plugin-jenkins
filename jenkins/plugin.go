@@ -19,7 +19,7 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 			Schema:      ConfigSchema,
 		},
 		TableMap: map[string]*plugin.Table{
-			// "jenkins_job": tableJenkinsJob(),
+			"jenkins_job": tableJenkinsJob(),
 		},
 	}
 
