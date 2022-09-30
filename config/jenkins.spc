@@ -1,7 +1,7 @@
 connection "jenkins" {
   plugin = "jenkins"
 
-  domain = "http://localhost:8080/"
-  user = "admin"
-  password = ""
+  url = "http://localhost:8080/"
+  user_id = "admin"
+  api_token = ""
 }

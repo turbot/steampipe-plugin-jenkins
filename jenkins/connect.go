@@ -17,32 +17,32 @@ func Connect(ctx context.Context, d *plugin.QueryData) (*gojenkins.Jenkins, erro
 
 	jenkinsConfig := GetConfig(d.Connection)
 
-	var domain, user, password string
+	var url, userId, apiToken string
 
 	if jenkinsConfig.Domain != nil {
-		domain = *jenkinsConfig.Domain
+		url = *jenkinsConfig.Domain
 	} else {
-		domain = os.Getenv("JENKINS_CLIENT_DOMAIN")
+		url = os.Getenv("JENKINS_URL")
 	}
 
-	if jenkinsConfig.User != nil {
-		user = *jenkinsConfig.User
+	if jenkinsConfig.UserId != nil {
+		userId = *jenkinsConfig.UserId
 	} else {
-		user = os.Getenv("JENKINS_CLIENT_CLIENTID")
+		userId = os.Getenv("JENKINS_USER_ID")
 	}
 
-	if jenkinsConfig.Password != nil {
-		password = *jenkinsConfig.Password
+	if jenkinsConfig.ApiToken != nil {
+		apiToken = *jenkinsConfig.ApiToken
 	} else {
-		password = os.Getenv("JENKINS_CLIENT_PASSWORD")
+		apiToken = os.Getenv("JENKINS_API_TOKEN")
 	}
 
 	// TODO handle the bellow
-	// if domain != "" && user != "" && password != "" {
+	// if url != "" && userId != "" && apiToken != "" {
 	// 	return nil, "Missing credentials"
 	// }
 
-	client, err := gojenkins.CreateJenkins(nil, domain, user, password).Init(ctx)
+	client, err := gojenkins.CreateJenkins(nil, url, userId, apiToken).Init(ctx)
 	if err != nil {
 		return nil, err
 	}
