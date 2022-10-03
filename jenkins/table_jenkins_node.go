@@ -18,6 +18,9 @@ func tableJenkinsNode() *plugin.Table {
 		Get: &plugin.GetConfig{
 			Hydrate:    getJenkinsNode,
 			KeyColumns: plugin.SingleColumn("display_name"),
+			IgnoreConfig: &plugin.IgnoreConfig{
+				ShouldIgnoreErrorFunc: isNotFoundError([]string{"No node found", "404"}),
+			},
 		},
 		List: &plugin.ListConfig{
 			Hydrate: listJenkinsNodes,
@@ -52,13 +55,13 @@ func listJenkinsNodes(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydrat
 	logger := plugin.Logger(ctx)
 	client, err := Connect(ctx, d)
 	if err != nil {
-		logger.Error("listJenkinsNodes", "connect_error", err)
+		logger.Error("jenkins_node.listJenkinsNodes", "connect_error", err)
 		return nil, err
 	}
 
 	nodes, err := client.GetAllNodes(ctx)
 	if err != nil {
-		logger.Error("listJenkinsNodes", "list_nodes_error", err)
+		logger.Error("jenkins_node.listJenkinsNodes", "list_nodes_error", err)
 		if strings.Contains(err.Error(), "Not found") {
 			return nil, nil
 		}
@@ -81,7 +84,7 @@ func listJenkinsNodes(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydrat
 
 func getJenkinsNode(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
-	logger.Trace("getJenkinsNode")
+	logger.Trace("jenkins_node.getJenkinsNode")
 	nodeName := d.KeyColumnQuals["display_name"].GetStringValue()
 
 	// Empty check for nodeName
@@ -91,13 +94,13 @@ func getJenkinsNode(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateD
 
 	client, err := Connect(ctx, d)
 	if err != nil {
-		logger.Error("getJenkinsNode", "connect_error", err)
+		logger.Error("jenkins_node.getJenkinsNode", "connect_error", err)
 		return nil, err
 	}
 
 	node, err := client.GetNode(ctx, nodeName)
 	if err != nil {
-		logger.Error("getJenkinsNode", "get_node_error", err)
+		logger.Error("jenkins_node.getJenkinsNode", "get_node_error", err)
 		return nil, err
 	}
 

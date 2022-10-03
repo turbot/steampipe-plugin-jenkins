@@ -19,6 +19,9 @@ func tableJenkinsJob() *plugin.Table {
 		Get: &plugin.GetConfig{
 			Hydrate:    getJenkinsJob,
 			KeyColumns: plugin.SingleColumn("name"),
+			IgnoreConfig: &plugin.IgnoreConfig{
+				ShouldIgnoreErrorFunc: isNotFoundError([]string{"404"}),
+			},
 		},
 		List: &plugin.ListConfig{
 			Hydrate: listJenkinsJobs,
@@ -68,13 +71,13 @@ func listJenkinsJobs(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydrate
 	logger := plugin.Logger(ctx)
 	client, err := Connect(ctx, d)
 	if err != nil {
-		logger.Error("listJenkinsJobs", "connect_error", err)
+		logger.Error("jenkins_job.listJenkinsJobs", "connect_error", err)
 		return nil, err
 	}
 
 	jobs, err := client.GetAllJobs(ctx)
 	if err != nil {
-		logger.Error("listJenkinsJobs", "list_jobs_error", err)
+		logger.Error("jenkins_job.listJenkinsJobs", "list_jobs_error", err)
 		if strings.Contains(err.Error(), "Not found") {
 			return nil, nil
 		}
@@ -97,7 +100,7 @@ func listJenkinsJobs(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydrate
 
 func getJenkinsJob(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
-	logger.Trace("getJenkinsJob")
+	logger.Trace("jenkins_job.getJenkinsJob")
 	jobName := d.KeyColumnQuals["name"].GetStringValue()
 
 	// Empty check for jobName
@@ -107,13 +110,13 @@ func getJenkinsJob(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateDa
 
 	client, err := Connect(ctx, d)
 	if err != nil {
-		logger.Error("getJenkinsJob", "connect_error", err)
+		logger.Error("jenkins_job.getJenkinsJob", "connect_error", err)
 		return nil, err
 	}
 
 	job, err := client.GetJob(ctx, jobName)
 	if err != nil {
-		logger.Error("getJenkinsJob", "get_job_error", err)
+		logger.Error("jenkins_job.getJenkinsJob", "get_job_error", err)
 		return nil, err
 	}
 
