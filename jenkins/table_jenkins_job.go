@@ -16,6 +16,10 @@ func tableJenkinsJob() *plugin.Table {
 	return &plugin.Table{
 		Name:        "jenkins_job",
 		Description: "A user-configured description of work which Jenkins should perform, such as building a piece of software, etc.",
+		Get: &plugin.GetConfig{
+			Hydrate:    getJenkinsJob,
+			KeyColumns: plugin.SingleColumn("name"),
+		},
 		List: &plugin.ListConfig{
 			Hydrate: listJenkinsJobs,
 		},
@@ -87,4 +91,31 @@ func listJenkinsJobs(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydrate
 	}
 
 	return nil, err
+}
+
+//// HYDRATE FUNCTION
+
+func getJenkinsJob(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
+	logger := plugin.Logger(ctx)
+	logger.Trace("getJenkinsJob")
+	jobName := d.KeyColumnQuals["name"].GetStringValue()
+
+	// Empty check for jobName
+	if jobName == "" {
+		return nil, nil
+	}
+
+	client, err := Connect(ctx, d)
+	if err != nil {
+		logger.Error("getJenkinsJob", "connect_error", err)
+		return nil, err
+	}
+
+	job, err := client.GetJob(ctx, jobName)
+	if err != nil {
+		logger.Error("getJenkinsJob", "get_job_error", err)
+		return nil, err
+	}
+
+	return job.Raw, nil
 }
