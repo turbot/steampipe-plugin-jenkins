@@ -15,6 +15,10 @@ func tableJenkinsNode() *plugin.Table {
 	return &plugin.Table{
 		Name:        "jenkins_node",
 		Description: "A machine which is part of the Jenkins environment and capable of executing Pipelines or jobs.",
+		Get: &plugin.GetConfig{
+			Hydrate:    getJenkinsNode,
+			KeyColumns: plugin.SingleColumn("display_name"),
+		},
 		List: &plugin.ListConfig{
 			Hydrate: listJenkinsNodes,
 		},
@@ -71,4 +75,31 @@ func listJenkinsNodes(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydrat
 	}
 
 	return nil, err
+}
+
+//// HYDRATE FUNCTION
+
+func getJenkinsNode(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
+	logger := plugin.Logger(ctx)
+	logger.Trace("getJenkinsNode")
+	nodeName := d.KeyColumnQuals["display_name"].GetStringValue()
+
+	// Empty check for nodeName
+	if nodeName == "" {
+		return nil, nil
+	}
+
+	client, err := Connect(ctx, d)
+	if err != nil {
+		logger.Error("getJenkinsNode", "connect_error", err)
+		return nil, err
+	}
+
+	node, err := client.GetNode(ctx, nodeName)
+	if err != nil {
+		logger.Error("getJenkinsNode", "get_node_error", err)
+		return nil, err
+	}
+
+	return node.Raw, nil
 }
