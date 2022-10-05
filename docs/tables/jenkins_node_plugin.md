@@ -15,7 +15,7 @@ select
 from
   jenkins_plugin
 where
-  has_update = true
+  has_update
 order by
   short_name;
 ```
@@ -30,7 +30,49 @@ select
 from
   jenkins_plugin
 where
-  active = false
+  not active
+order by
+  short_name;
+```
+
+### Plugins without a backup version
+
+```sql
+select
+  short_name, 
+  long_name,
+  url
+from
+  jenkins_plugin
+where
+  backup_version is null
+order by
+  short_name;
+```
+
+### Number of dependencies of each plugin
+
+```sql
+select
+  short_name, 
+  long_name,
+  jsonb_array_length(dependencies) number_of_dependencies
+from
+  jenkins_plugin
+order by
+  short_name;
+```
+
+### Plugins with no dependencies
+
+```sql
+select
+  short_name, 
+  long_name
+from
+  jenkins_plugin
+where
+  dependencies = '[]'::jsonb
 order by
   short_name;
 ```
