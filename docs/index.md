@@ -2,7 +2,7 @@
 organization: Turbot
 category: ["saas"]
 icon_url: "/images/plugins/turbot/jenkins.svg"
-brand_color: "#00297A"
+brand_color: "#41667E"
 display_name: "Jenkins"
 name: "jenkins"
 description: "Steampipe plugin for querying resource jobs, builds, nodes, plugin and more from Jenkins."
