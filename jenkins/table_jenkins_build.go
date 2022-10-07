@@ -34,7 +34,7 @@ func tableJenkinsBuild() *plugin.Table {
 			{Name: "built_on", Type: proto.ColumnType_STRING, Hydrate: getJenkinsBuild, Description: "Node where the build was executed."},
 			{Name: "change_set", Type: proto.ColumnType_JSON, Hydrate: getJenkinsBuild, Description: "SCM changes between builds."},
 			{Name: "culprits", Type: proto.ColumnType_JSON, Hydrate: getJenkinsBuild, Description: "People involved to the build."},
-			{Name: "description", Type: proto.ColumnType_STRING, Hydrate: getJenkinsBuild, Description: "An optional description added to the build."},
+			{Name: "description", Type: proto.ColumnType_STRING, Hydrate: getJenkinsBuild, Description: "An optional description that can be added to the build."},
 			{Name: "display_name", Type: proto.ColumnType_STRING, Hydrate: getJenkinsBuild, Description: "The name of the build, defaults to the build number."},
 			{Name: "estimated_duration", Type: proto.ColumnType_DOUBLE, Hydrate: getJenkinsBuild, Description: "The expected amount of building time."},
 			{Name: "executor", Type: proto.ColumnType_JSON, Hydrate: getJenkinsBuild, Description: "The executor where the build ran."},
@@ -58,7 +58,7 @@ func tableJenkinsBuild() *plugin.Table {
 
 //// LIST FUNCTION
 
-func listJenkinsBuilds(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
+func listJenkinsBuilds(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
 	jobName := d.KeyColumnQuals["job_name"].GetStringValue()
 
