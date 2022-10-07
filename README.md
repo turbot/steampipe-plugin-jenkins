@@ -26,10 +26,7 @@ select
   in_queue,
   last_completed_build  ->> 'URL' as last_completed_build
 from
-  jenkins_job
-order by
-  color,
-  name;
+  jenkins_job;
 ```
 
 ## Developing
