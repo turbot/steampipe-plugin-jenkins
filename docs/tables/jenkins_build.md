@@ -8,8 +8,7 @@ Result of a single execution of a job.
 
 ```sql
 select
-  artifact ->> 'displayPath' as artifact,
-  artifact ->> 'relativePath' as path
+  artifact ->> 'fileName' as file_name
 from
   jenkins_build as build,
   jsonb_array_elements(artifacts) as artifact
@@ -32,10 +31,10 @@ group by
   result;
 ```
 
-### Average execution time duration of successful builds of a job (in milliseconds)
+### Average execution time duration of successful builds of a job (in seconds)
 ```sql
 select
-  avg(duration) as average_duration_ms
+  ROUND(avg(duration)/1000) as average_duration
 from
   jenkins_build
 where
@@ -58,5 +57,5 @@ where
   job_name = 'build-and-unit-test' and
   duration > estimated_duration
 order by
-  timestamp DESC;
+  timestamp desc;
 ```

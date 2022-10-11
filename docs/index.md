@@ -71,7 +71,7 @@ connection "jenkins" {
 
   # Get your API token from Jenkins https://www.jenkins.io/doc/book/using/using-credentials/
 
-  # url = "http://<your_jenkins_domain>"
+  # url = "https://ci-cd.internal.my-company.com"
   # user_id = "admin"
   # api_token = "116af6f5cf749f31410983860c692850a2"
 }
@@ -94,7 +94,7 @@ The Jenkins plugin will use the standard Jenkins environment variables to obtain
 #### API Token
 
 ```sh
-export JENKINS_URL=https://<your_jenkins_domain>
+export JENKINS_URL=https://ci-cd.internal.my-company.com
 export JENKINS_USER_ID=admin
 export JENKINS_API_TOKEN=116af6f5cf749f31410983860c692850a2
 ```

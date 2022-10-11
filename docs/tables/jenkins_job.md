@@ -20,13 +20,13 @@ where
 
 ```sql
 select
-  health_report -> 0 ->> 'score' as health_report_score
+  health_report -> 0 ->> 'score' as health_report_score,
   name,
-  health_report -> 0 ->> 'description' as health_report_description,
+  health_report -> 0 ->> 'description' as health_report_description
 from
   jenkins_job
 order by 
-  health_report_score DESC;
+  health_report_score desc;
 ```
 
 ### Next build number of a job
@@ -49,9 +49,8 @@ select
 from
   jenkins_job
 order by
-  number_of_builds DESC
-limit 1
-;
+  number_of_builds desc
+limit 10;
 ```
 
 ### Job's last successful build

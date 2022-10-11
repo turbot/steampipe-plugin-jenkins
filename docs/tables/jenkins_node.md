@@ -48,7 +48,7 @@ select
 from
   jenkins_node
 order by
-  num_executors DESC;
+  num_executors desc;
 ```
 
 ### Number of nodes by OS and architecture type
@@ -61,5 +61,5 @@ from
 group by
   architecture
 order by
-  architecture DESC;
+  architecture desc;
 ```
