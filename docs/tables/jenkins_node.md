@@ -4,6 +4,26 @@ A machine which is part of the Jenkins environment and capable of executing Pipe
 
 ## Examples
 
+### Total number of nodes
+
+```sql
+select
+  count(1) as number_of_nodes
+from
+  jenkins_node;
+```
+
+### Number of nodes in idle
+
+```sql
+select
+  count(1) as number_of_nodes_in_idle
+from
+  jenkins_node
+where
+  idle;
+```
+
 ### Nodes offline
 
 ```sql
@@ -15,17 +35,6 @@ from
   jenkins_node
 where
   offline;
-```
-
-### Number of nodes in idle
-
-```sql
-select
-  count(1)
-from
-  jenkins_node
-where
-  idle;
 ```
 
 ### Nodes that allows manual launch

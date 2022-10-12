@@ -29,17 +29,6 @@ order by
   health_report_score desc;
 ```
 
-### Next build number of a job
-
-```sql
-select
-  next_build_number
-from
-  jenkins_job
-where
-  name = 'my-job';
-```
-
 ### Top 10 Jobs with most builds
 
 ```sql
@@ -63,4 +52,22 @@ from
   jenkins_job
 order by
   name;
+```
+
+### Jobs that last build failed
+
+```sql
+select
+  full_display_name as job,
+  color,
+  health_report -> 0 ->> 'score' as health_report_score,
+  health_report -> 0 ->> 'description' as health_report_description,
+  last_unsuccessful_build ->> 'URL' as last_unsuccessful_build
+from
+  jenkins_job
+where
+  last_build ->> 'Number' != '0' and
+  last_build ->> 'Number' = last_unsuccessful_build ->> 'Number'
+order by
+  full_display_name;
 ```
