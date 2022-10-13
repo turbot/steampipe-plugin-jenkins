@@ -25,6 +25,9 @@ func tableJenkinsBuild() *plugin.Table {
 		List: &plugin.ListConfig{
 			Hydrate:    listJenkinsBuilds,
 			KeyColumns: plugin.SingleColumn("job_name"),
+			IgnoreConfig: &plugin.IgnoreConfig{
+				ShouldIgnoreErrorFunc: isNotFoundError([]string{"No build found", "404"}),
+			},
 		},
 
 		Columns: []*plugin.Column{

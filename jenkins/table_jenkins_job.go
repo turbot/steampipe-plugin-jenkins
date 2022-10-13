@@ -52,7 +52,7 @@ func tableJenkinsJob() *plugin.Table {
 			{Name: "last_unsuccessful_build", Type: proto.ColumnType_JSON, Description: "Last unsuccessful build of the job."},
 			{Name: "name", Type: proto.ColumnType_STRING, Description: "Unique key for the job."},
 			{Name: "next_build_number", Type: proto.ColumnType_INT, Description: "Number that will be assigned to build on next"},
-			{Name: "primary_view", Type: proto.ColumnType_BOOL, Description: "Main view of this job."},
+			{Name: "primary_view", Type: proto.ColumnType_JSON, Description: "Main view of this job."},
 			{Name: "property", Type: proto.ColumnType_JSON, Description: "Properties of the job."},
 			{Name: "scm", Type: proto.ColumnType_JSON, Description: "Source code management set on this job."},
 			{Name: "title", Type: proto.ColumnType_STRING, Transform: transform.FromField("DisplayName"), Description: titleDescription},
