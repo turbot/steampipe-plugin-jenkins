@@ -4,6 +4,7 @@ import (
 	"context"
 	"strings"
 
+	"github.com/bndr/gojenkins"
 	"github.com/turbot/steampipe-plugin-sdk/v4/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v4/plugin/transform"
 
@@ -18,20 +19,20 @@ func tableJenkinsFreestyle() *plugin.Table {
 		Description: "A user-configured description of work which Jenkins should perform, such as building a piece of software, etc.",
 		Get: &plugin.GetConfig{
 			Hydrate:    getJenkinsFreestyle,
-			KeyColumns: plugin.SingleColumn("name"),
+			KeyColumns: plugin.SingleColumn("full_name"),
 			IgnoreConfig: &plugin.IgnoreConfig{
 				ShouldIgnoreErrorFunc: isNotFoundError([]string{"404"}),
 			},
 		},
 		List: &plugin.ListConfig{
-			Hydrate: listJenkinsFreestyles,
+			ParentHydrate: listJenkinsFolders,
+			Hydrate:       listJenkinsFreestyles,
 		},
 
 		Columns: []*plugin.Column{
 			{Name: "actions", Type: proto.ColumnType_JSON, Description: "Data about the freestyle trigger."},
 			{Name: "buildable", Type: proto.ColumnType_BOOL, Description: "Boolean to indicate whether the freestyle is able to run a build."},
 			{Name: "builds", Type: proto.ColumnType_JSON, Description: "List of builds of the freestyle."},
-			{Name: "class", Type: proto.ColumnType_STRING, Description: ""}, // TODO add description
 			{Name: "color", Type: proto.ColumnType_STRING, Description: "Color indicating the health of the freestyle based on the result of recent builds."},
 			{Name: "concurrent_build", Type: proto.ColumnType_BOOL, Description: "Boolean to indicate whether the freestyle is able to run builds in parallel."},
 			{Name: "description", Type: proto.ColumnType_STRING, Description: "An optional description that can be added to the freestyle."},
@@ -39,7 +40,7 @@ func tableJenkinsFreestyle() *plugin.Table {
 			{Name: "downstream_projects", Type: proto.ColumnType_JSON, Description: "Freestyles called after build execution."},
 			{Name: "first_build", Type: proto.ColumnType_JSON, Description: "First build of the freestyle."},
 			{Name: "full_display_name", Type: proto.ColumnType_STRING, Description: "Human readable name of the freestyle, including folder."},
-			{Name: "full_name", Type: proto.ColumnType_STRING, Description: "Freestyle name including folder."},
+			{Name: "full_name", Type: proto.ColumnType_STRING, Description: "Unique key for the freestyle."},
 			{Name: "health_report", Type: proto.ColumnType_JSON, Description: "Health data about recent builds."},
 			{Name: "in_queue", Type: proto.ColumnType_BOOL, Description: "Boolean to indicate whether the freestyle is waiting on queue to run a build."},
 			{Name: "freestyles", Type: proto.ColumnType_JSON, Description: "Child freestyles."},
@@ -51,7 +52,7 @@ func tableJenkinsFreestyle() *plugin.Table {
 			{Name: "last_successful_build", Type: proto.ColumnType_JSON, Description: "Last successful build of the freestyle."},
 			{Name: "last_unstable_build", Type: proto.ColumnType_JSON, Description: "Last unstable build of the freestyle."},
 			{Name: "last_unsuccessful_build", Type: proto.ColumnType_JSON, Description: "Last unsuccessful build of the freestyle."},
-			{Name: "name", Type: proto.ColumnType_STRING, Description: "Unique key for the freestyle."},
+			{Name: "name", Type: proto.ColumnType_STRING, Description: "Name of the freestyle."},
 			{Name: "next_build_number", Type: proto.ColumnType_INT, Description: "Number that will be assigned to build on next"},
 			{Name: "primary_view", Type: proto.ColumnType_JSON, Description: "Main view of this freestyle."},
 			{Name: "property", Type: proto.ColumnType_JSON, Description: "Properties of the freestyle."},
@@ -66,15 +67,12 @@ func tableJenkinsFreestyle() *plugin.Table {
 
 //// LIST FUNCTION
 
-func listJenkinsFreestyles(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
+func listJenkinsFreestyles(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
-	client, err := Connect(ctx, d)
-	if err != nil {
-		logger.Error("jenkins_freestyle.listJenkinsFreestyles", "connect_error", err)
-		return nil, err
-	}
 
-	freestyles, err := client.GetAllJobs(ctx)
+	folder := h.Item.(*gojenkins.Job)
+
+	freestyles, err := folder.GetInnerJobs(ctx)
 	if err != nil {
 		logger.Error("jenkins_freestyle.listJenkinsFreestyles", "list_freestyles_error", err)
 		if strings.Contains(err.Error(), "Not found") {
@@ -104,10 +102,10 @@ func listJenkinsFreestyles(ctx context.Context, d *plugin.QueryData, _ *plugin.H
 func getJenkinsFreestyle(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
 	logger.Trace("jenkins_freestyle.getJenkinsFreestyle")
-	freestyleName := d.KeyColumnQuals["name"].GetStringValue()
+	freestyleFullName := d.KeyColumnQuals["full_name"].GetStringValue()
 
-	// Empty check for freestyleName
-	if freestyleName == "" {
+	// Empty check for freestyleFullName
+	if freestyleFullName == "" {
 		return nil, nil
 	}
 
@@ -117,7 +115,11 @@ func getJenkinsFreestyle(ctx context.Context, d *plugin.QueryData, h *plugin.Hyd
 		return nil, err
 	}
 
-	freestyle, err := client.GetJob(ctx, freestyleName)
+	freestyleFullNameList := strings.Split(freestyleFullName, "/")
+	freestyleParentNames := freestyleFullNameList[0 : len(freestyleFullNameList)-1]
+	freestyleName := freestyleFullNameList[len(freestyleFullNameList)-1]
+
+	freestyle, err := client.GetJob(ctx, freestyleName, freestyleParentNames...)
 	if err != nil {
 		logger.Error("jenkins_freestyle.getJenkinsFreestyle", "get_freestyle_error", err)
 		return nil, err
