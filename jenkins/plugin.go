@@ -19,11 +19,13 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 			Schema:      ConfigSchema,
 		},
 		TableMap: map[string]*plugin.Table{
-			"jenkins_build":  tableJenkinsBuild(),
-			"jenkins_job":    tableJenkinsJob(),
-			"jenkins_node":   tableJenkinsNode(),
-			"jenkins_plugin": tableJenkinsPlugin(),
-			"jenkins_view":   tableJenkinsView(),
+			"jenkins_build":     tableJenkinsBuild(),
+			"jenkins_folder":    tableJenkinsFolder(),
+			"jenkins_freestyle": tableJenkinsFreestyle(),
+			"jenkins_job":       tableJenkinsJob(),
+			"jenkins_node":      tableJenkinsNode(),
+			"jenkins_plugin":    tableJenkinsPlugin(),
+			"jenkins_view":      tableJenkinsView(),
 		},
 	}
 
