@@ -14,21 +14,27 @@ from
   jsonb_array_elements(artifacts) as artifact
 where
   build.number = 128 and
-  job_name = 'build-and-unit-test';
+  job_full_name = 'build-and-unit-test';
 ```
 
-### Amount of failed builds of a job
+### Amount of failed builds by freestyle job
 
 ```sql
 select
+  j.full_name as job,
   count(1) as failed_builds
 from
-  jenkins_build
+  jenkins_freestyle as j
+join
+  jenkins_build b
+on
+  b.job_full_name = j.full_name
 where
-  job_name = 'build-and-unit-test' and
-  result = 'FAILURE'
+  b.result = 'FAILURE'
 group by
-  result;
+  j.full_name
+order by
+  failed_builds desc;
 ```
 
 ### Average execution time duration of successful builds of a job (in seconds)
@@ -38,7 +44,7 @@ select
 from
   jenkins_build
 where
-  job_name = 'build-and-unit-test' and
+  job_full_name = 'corp-project/build-and-test' and
   result = 'SUCCESS'
 group by
   result;
@@ -54,7 +60,7 @@ select
 from
   jenkins_build
 where
-  job_name = 'build-and-unit-test' and
+  job_full_name = 'corp-project/production/deploy-to-prod' and
   duration > estimated_duration
 order by
   timestamp desc;

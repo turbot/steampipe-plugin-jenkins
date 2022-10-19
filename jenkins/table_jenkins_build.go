@@ -17,14 +17,14 @@ func tableJenkinsBuild() *plugin.Table {
 		Description: "Result of a single execution of a job",
 		Get: &plugin.GetConfig{
 			Hydrate:    getJenkinsBuild,
-			KeyColumns: plugin.AllColumns([]string{"job_name", "number"}),
+			KeyColumns: plugin.AllColumns([]string{"job_full_name", "number"}),
 			IgnoreConfig: &plugin.IgnoreConfig{
 				ShouldIgnoreErrorFunc: isNotFoundError([]string{"No build found", "404"}),
 			},
 		},
 		List: &plugin.ListConfig{
 			Hydrate:    listJenkinsBuilds,
-			KeyColumns: plugin.SingleColumn("job_name"),
+			KeyColumns: plugin.SingleColumn("job_full_name"),
 			IgnoreConfig: &plugin.IgnoreConfig{
 				ShouldIgnoreErrorFunc: isNotFoundError([]string{"No build found", "404"}),
 			},
@@ -44,7 +44,7 @@ func tableJenkinsBuild() *plugin.Table {
 			{Name: "finger_print", Type: proto.ColumnType_JSON, Hydrate: getJenkinsBuild, Description: "MD5 checksum fingerprint of the artifact file."},
 			{Name: "full_display_name", Type: proto.ColumnType_STRING, Hydrate: getJenkinsBuild, Description: "Stands for the job name plus the display name."},
 			{Name: "id", Type: proto.ColumnType_STRING, Hydrate: getJenkinsBuild, Transform: transform.FromField("ID"), Description: "Same as the build number, but as string."},
-			{Name: "job_name", Type: proto.ColumnType_STRING, Description: "Name of the job which defines the build."},
+			{Name: "job_full_name", Type: proto.ColumnType_STRING, Description: "Full name of the job which defines the build."},
 			{Name: "keep_log", Type: proto.ColumnType_BOOL, Hydrate: getJenkinsBuild, Description: "Boolean to indicate whether the build kept the log."},
 			{Name: "maven_artifacts", Type: proto.ColumnType_JSON, Hydrate: getJenkinsBuild, Description: "Maven artifacts generated during the build execution, if any."},
 			{Name: "maven_version_used", Type: proto.ColumnType_STRING, Hydrate: getJenkinsBuild, Description: "Version of Maven used to execute the build."},
@@ -63,10 +63,10 @@ func tableJenkinsBuild() *plugin.Table {
 
 func listJenkinsBuilds(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
-	jobName := d.KeyColumnQuals["job_name"].GetStringValue()
+	jobFullName := d.KeyColumnQuals["job_full_name"].GetStringValue()
 
-	// Empty check for jobName
-	if jobName == "" {
+	// Empty check for jobFullName
+	if jobFullName == "" {
 		return nil, nil
 	}
 
@@ -76,7 +76,17 @@ func listJenkinsBuilds(ctx context.Context, d *plugin.QueryData, h *plugin.Hydra
 		return nil, err
 	}
 
-	builds, err := client.GetAllBuildIds(ctx, jobName)
+	jobFullNameList := strings.Split(jobFullName, "/")
+	jobParentNames := jobFullNameList[0 : len(jobFullNameList)-1]
+	jobName := jobFullNameList[len(jobFullNameList)-1]
+
+	job, err := client.GetJob(ctx, jobName, jobParentNames...)
+	if err != nil {
+		logger.Error("jenkins_build.listJenkinsBuilds", "get_job_error", err)
+		return nil, err
+	}
+
+	builds, err := job.GetAllBuildIds(ctx)
 	if err != nil {
 		logger.Error("jenkins_build.listJenkinsBuilds", "list_builds_error", err)
 		if strings.Contains(err.Error(), "Not found") {
@@ -87,9 +97,9 @@ func listJenkinsBuilds(ctx context.Context, d *plugin.QueryData, h *plugin.Hydra
 
 	for _, build := range builds {
 		buildMap := map[string]interface{}{
-			"Number":  build.Number,
-			"URL":     build.URL,
-			"JobName": jobName,
+			"Number":      build.Number,
+			"URL":         build.URL,
+			"JobFullName": jobFullName,
 		}
 		d.StreamListItem(ctx, buildMap)
 
@@ -107,10 +117,10 @@ func listJenkinsBuilds(ctx context.Context, d *plugin.QueryData, h *plugin.Hydra
 func getJenkinsBuild(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
 	logger.Trace("jenkins_build.getJenkinsBuild")
-	jobName := d.KeyColumnQuals["job_name"].GetStringValue()
+	jobFullName := d.KeyColumnQuals["job_full_name"].GetStringValue()
 
-	// Empty check for jobName
-	if jobName == "" {
+	// Empty check for jobFullName
+	if jobFullName == "" {
 		return nil, nil
 	}
 
@@ -130,7 +140,17 @@ func getJenkinsBuild(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrate
 		return nil, err
 	}
 
-	build, err := client.GetBuild(ctx, jobName, buildNumber)
+	jobFullNameList := strings.Split(jobFullName, "/")
+	jobParentNames := jobFullNameList[0 : len(jobFullNameList)-1]
+	jobName := jobFullNameList[len(jobFullNameList)-1]
+
+	job, err := client.GetJob(ctx, jobName, jobParentNames...)
+	if err != nil {
+		logger.Error("jenkins_build.listJenkinsBuilds", "get_job_error", err)
+		return nil, err
+	}
+
+	build, err := job.GetBuild(ctx, buildNumber)
 	if err != nil {
 		logger.Error("jenkins_build.getJenkinsBuild", "get_build_error", err)
 		return nil, err
