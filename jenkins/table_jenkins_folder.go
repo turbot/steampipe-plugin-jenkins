@@ -16,7 +16,7 @@ import (
 func tableJenkinsFolder() *plugin.Table {
 	return &plugin.Table{
 		Name:        "jenkins_folder",
-		Description: "A user-configured description of work which Jenkins should perform, such as building a piece of software, etc.",
+		Description: "A container that stores job projects in it. Unlike view, which is just a filter, a folder creates a separate namespace, so you can have multiple things of the same name as long as they are in different folders.",
 		Get: &plugin.GetConfig{
 			Hydrate:    getJenkinsFolder,
 			KeyColumns: plugin.SingleColumn("full_name"),
@@ -29,7 +29,6 @@ func tableJenkinsFolder() *plugin.Table {
 		},
 
 		Columns: []*plugin.Column{
-			{Name: "actions", Type: proto.ColumnType_JSON, Transform: transform.FromField("Raw.Actions"), Description: "Data about the folder trigger."},
 			{Name: "description", Type: proto.ColumnType_STRING, Transform: transform.FromField("Raw.Description"), Description: "An optional description that can be added to the folder."},
 			{Name: "display_name", Type: proto.ColumnType_STRING, Transform: transform.FromField("Raw.DisplayName"), Description: "Human readable name of the folder."},
 			{Name: "full_display_name", Type: proto.ColumnType_STRING, Transform: transform.FromField("Raw.FullDisplayName"), Description: "Human readable name of the folder, including parent folder."},

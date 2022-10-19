@@ -16,7 +16,7 @@ import (
 func tableJenkinsPipeline() *plugin.Table {
 	return &plugin.Table{
 		Name:        "jenkins_pipeline",
-		Description: "A user-configured description of work which Jenkins should perform, such as building a piece of software, etc.",
+		Description: "Orchestrates long-running activities that can span multiple build agents. Suitable for building pipelines (formerly known as workflows) and/or organizing complex activities that do not easily fit in free-style job type.",
 		Get: &plugin.GetConfig{
 			Hydrate:    getJenkinsPipeline,
 			KeyColumns: plugin.SingleColumn("full_name"),
@@ -37,12 +37,12 @@ func tableJenkinsPipeline() *plugin.Table {
 			{Name: "concurrent_build", Type: proto.ColumnType_BOOL, Description: "Boolean to indicate whether the pipeline is able to run builds in parallel."},
 			{Name: "description", Type: proto.ColumnType_STRING, Description: "An optional description that can be added to the pipeline."},
 			{Name: "display_name", Type: proto.ColumnType_STRING, Description: "Human readable name of the pipeline."},
+			{Name: "downstream_projects", Type: proto.ColumnType_JSON, Description: "Jobs called after build execution."},
 			{Name: "first_build", Type: proto.ColumnType_JSON, Description: "First build of the pipeline."},
 			{Name: "full_display_name", Type: proto.ColumnType_STRING, Description: "Human readable name of the pipeline, including folder."},
 			{Name: "full_name", Type: proto.ColumnType_STRING, Description: "Unique key for the pipeline."},
 			{Name: "health_report", Type: proto.ColumnType_JSON, Description: "Health data about recent builds."},
 			{Name: "in_queue", Type: proto.ColumnType_BOOL, Description: "Boolean to indicate whether the pipeline is waiting on queue to run a build."},
-			{Name: "pipelines", Type: proto.ColumnType_JSON, Description: "Child pipelines."},
 			{Name: "keep_dependencies", Type: proto.ColumnType_BOOL, Description: "Boolean to indicate whether the pipeline will keep dependencies used on last build."},
 			{Name: "last_build", Type: proto.ColumnType_JSON, Description: "Last build of the pipeline."},
 			{Name: "last_completed_build", Type: proto.ColumnType_JSON, Description: "Last completed build of the pipeline."},
@@ -53,12 +53,11 @@ func tableJenkinsPipeline() *plugin.Table {
 			{Name: "last_unsuccessful_build", Type: proto.ColumnType_JSON, Description: "Last unsuccessful build of the pipeline."},
 			{Name: "name", Type: proto.ColumnType_STRING, Description: "Name of the pipeline."},
 			{Name: "next_build_number", Type: proto.ColumnType_INT, Description: "Number that will be assigned to build on next"},
-			{Name: "primary_view", Type: proto.ColumnType_JSON, Description: "Main view of this pipeline."},
 			{Name: "property", Type: proto.ColumnType_JSON, Description: "Properties of the pipeline."},
 			{Name: "scm", Type: proto.ColumnType_JSON, Description: "Source code management set on this pipeline."},
 			{Name: "title", Type: proto.ColumnType_STRING, Transform: transform.FromField("DisplayName"), Description: titleDescription},
+			{Name: "upstream_projects", Type: proto.ColumnType_JSON, Description: "Jobs that calls this pipeline after their build finishes."},
 			{Name: "url", Type: proto.ColumnType_STRING, Transform: transform.FromField("URL"), Description: "Full URL to the pipeline."},
-			{Name: "views", Type: proto.ColumnType_JSON, Description: "Views this pipeline is shows on."},
 		},
 	}
 }
