@@ -33,12 +33,12 @@ func tableJenkinsFolder() *plugin.Table {
 			{Name: "display_name", Type: proto.ColumnType_STRING, Transform: transform.FromField("Raw.DisplayName"), Description: "Human readable name of the folder."},
 			{Name: "full_display_name", Type: proto.ColumnType_STRING, Transform: transform.FromField("Raw.FullDisplayName"), Description: "Human readable name of the folder, including parent folder."},
 			{Name: "full_name", Type: proto.ColumnType_STRING, Transform: transform.FromField("Raw.FullName"), Description: "Unique key for the folder."},
+			{Name: "jobs", Type: proto.ColumnType_JSON, Transform: transform.FromField("Raw.Jobs"), Description: "Child jobs."},
 			{Name: "name", Type: proto.ColumnType_STRING, Transform: transform.FromField("Raw.Name"), Description: "Name of the folder, without its parent folder."},
 			{Name: "primary_view", Type: proto.ColumnType_JSON, Transform: transform.FromField("Raw.PrimaryView"), Description: "Main view of this folder."},
 			{Name: "title", Type: proto.ColumnType_STRING, Transform: transform.FromField("Raw.DisplayName"), Description: titleDescription},
 			{Name: "url", Type: proto.ColumnType_STRING, Transform: transform.FromField("Raw.URL"), Description: "Full URL to the folder."},
-			{Name: "views", Type: proto.ColumnType_JSON, Transform: transform.FromField("Raw.Views"), Description: "Views this folder is shows on."},
-			{Name: "jobs", Type: proto.ColumnType_JSON, Transform: transform.FromField("Raw.Jobs"), Description: "Child jobs."},
+			{Name: "views", Type: proto.ColumnType_JSON, Transform: transform.FromField("Raw.Views"), Description: "Views set at this folder."},
 		},
 	}
 }
