@@ -37,7 +37,6 @@ func tableJenkinsPipeline() *plugin.Table {
 			{Name: "concurrent_build", Type: proto.ColumnType_BOOL, Description: "Boolean to indicate whether the pipeline is able to run builds in parallel."},
 			{Name: "description", Type: proto.ColumnType_STRING, Description: "An optional description that can be added to the pipeline."},
 			{Name: "display_name", Type: proto.ColumnType_STRING, Description: "Human readable name of the pipeline."},
-			{Name: "downstream_projects", Type: proto.ColumnType_JSON, Description: "Jobs called after build execution."},
 			{Name: "first_build", Type: proto.ColumnType_JSON, Description: "First build of the pipeline."},
 			{Name: "full_display_name", Type: proto.ColumnType_STRING, Description: "Human readable name of the pipeline, including folder."},
 			{Name: "full_name", Type: proto.ColumnType_STRING, Description: "Unique key for the pipeline."},
@@ -54,9 +53,7 @@ func tableJenkinsPipeline() *plugin.Table {
 			{Name: "name", Type: proto.ColumnType_STRING, Description: "Name of the pipeline."},
 			{Name: "next_build_number", Type: proto.ColumnType_INT, Description: "Number that will be assigned to build on next"},
 			{Name: "property", Type: proto.ColumnType_JSON, Description: "Properties of the pipeline."},
-			{Name: "scm", Type: proto.ColumnType_JSON, Description: "Source code management set on this pipeline."},
 			{Name: "title", Type: proto.ColumnType_STRING, Transform: transform.FromField("DisplayName"), Description: titleDescription},
-			{Name: "upstream_projects", Type: proto.ColumnType_JSON, Description: "Jobs that calls this pipeline after their build finishes."},
 			{Name: "url", Type: proto.ColumnType_STRING, Transform: transform.FromField("URL"), Description: "Full URL to the pipeline."},
 		},
 	}
