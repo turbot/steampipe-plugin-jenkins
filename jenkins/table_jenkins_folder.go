@@ -43,6 +43,27 @@ func tableJenkinsFolder() *plugin.Table {
 	}
 }
 
+//// Handle Jenkins root level as a folder
+
+func handleRootFolder(client *gojenkins.Jenkins) gojenkins.Job {
+	rootFolder := gojenkins.Job{
+		Jenkins: client,
+		Base:    "/",
+		Raw: &gojenkins.JobResponse{
+			Description:     "Jenkins root",
+			DisplayName:     "Root",
+			FullDisplayName: "Root",
+			FullName:        "/",
+			Jobs:            client.Raw.Jobs,
+			Name:            "/",
+			PrimaryView:     (*gojenkins.ViewData)(&client.Raw.PrimaryView),
+			URL:             client.Server + "/",
+			Views:           client.Raw.Views,
+		},
+	}
+	return rootFolder
+}
+
 //// Recursively find sub folders
 
 func handleFolders(folders []*gojenkins.Job, ctx context.Context, d *plugin.QueryData) {
@@ -52,6 +73,11 @@ func handleFolders(folders []*gojenkins.Job, ctx context.Context, d *plugin.Quer
 			continue
 		}
 		d.StreamListItem(ctx, folder)
+
+		// Context can be cancelled due to manual cancellation or the limit has been hit
+		if d.QueryStatus.RowsRemaining(ctx) == 0 {
+			return
+		}
 
 		child_jobs, _ := folder.GetInnerJobs(ctx)
 		handleFolders(child_jobs, ctx, d)
@@ -68,6 +94,9 @@ func listJenkinsFolders(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydr
 		return nil, err
 	}
 
+	rootFolder := handleRootFolder(client)
+	d.StreamListItem(ctx, &rootFolder)
+
 	folders, err := client.GetAllJobs(ctx)
 	if err != nil {
 		logger.Error("jenkins_folder.listJenkinsFolders", "list_folders_error", err)
@@ -78,12 +107,6 @@ func listJenkinsFolders(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydr
 	}
 
 	handleFolders(folders, ctx, d)
-
-	// TODO not sure where to put this:
-	// // Context can be cancelled due to manual cancellation or the limit has been hit
-	// if d.QueryStatus.RowsRemaining(ctx) == 0 {
-	// 	return nil, nil
-	// }
 
 	return nil, err
 }
@@ -104,6 +127,11 @@ func getJenkinsFolder(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrat
 	if err != nil {
 		logger.Error("jenkins_folder.getJenkinsFolder", "connect_error", err)
 		return nil, err
+	}
+
+	if folderFullName == "/" {
+		rootFolder := handleRootFolder(client)
+		return &rootFolder, nil
 	}
 
 	folderFullNameList := strings.Split(folderFullName, "/")
