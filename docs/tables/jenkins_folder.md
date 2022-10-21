@@ -66,7 +66,7 @@ join
 on
   fs.full_name = folder.full_name || '/' || (job ->> 'name')
 where
-  folder.full_name = 'corp-project'
+  folder.full_name = 'corp-project';
 ```
 
 ### Freestyle job's last successful build in a folder
@@ -86,7 +86,7 @@ join
 on
   fs.full_name = folder.full_name || '/' || (job ->> 'name')
 where
-  folder.full_name = 'corp-project'
+  folder.full_name = 'corp-project';
 ```
 
 ### Failed freestyle project in a folder

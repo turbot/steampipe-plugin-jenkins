@@ -44,7 +44,7 @@ func tableJenkinsBuild() *plugin.Table {
 			{Name: "finger_print", Type: proto.ColumnType_JSON, Hydrate: getJenkinsBuild, Description: "MD5 checksum fingerprint of the artifact file."},
 			{Name: "full_display_name", Type: proto.ColumnType_STRING, Hydrate: getJenkinsBuild, Description: "Stands for the job name plus the display name."},
 			{Name: "id", Type: proto.ColumnType_STRING, Hydrate: getJenkinsBuild, Transform: transform.FromField("ID"), Description: "Same as the build number, but as string."},
-			{Name: "job_full_name", Type: proto.ColumnType_STRING, Description: "Full name of the job which defines the build."},
+			{Name: "job_full_name", Type: proto.ColumnType_STRING, Description: "Full name of the job which defines the build. This column is required on any query because a build cannot exist without a job"},
 			{Name: "keep_log", Type: proto.ColumnType_BOOL, Hydrate: getJenkinsBuild, Description: "Boolean to indicate whether the build kept the log."},
 			{Name: "maven_artifacts", Type: proto.ColumnType_JSON, Hydrate: getJenkinsBuild, Description: "Maven artifacts generated during the build execution, if any."},
 			{Name: "maven_version_used", Type: proto.ColumnType_STRING, Hydrate: getJenkinsBuild, Description: "Version of Maven used to execute the build."},

@@ -38,6 +38,7 @@ order by
 ```
 
 ### Average execution time duration of successful builds of a job (in seconds)
+
 ```sql
 select
   ROUND(avg(duration)/1000) as average_duration
@@ -51,6 +52,7 @@ group by
 ```
 
 ### Builds that took longer than estimated to execute (in seconds)
+
 ```sql
 select
   full_display_name,
