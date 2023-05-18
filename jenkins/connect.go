@@ -9,12 +9,16 @@ import (
 )
 
 func Connect(ctx context.Context, d *plugin.QueryData) (*gojenkins.Jenkins, error) {
-	// have we already created and cached the session?
-	sessionCacheKey := "JenkinsSession"
-	if cachedData, ok := d.ConnectionManager.Cache.Get(sessionCacheKey); ok {
-		return cachedData.(*gojenkins.Jenkins), nil
+	conn, err := connectCached(ctx, d, nil)
+	if err != nil {
+		return nil, err
 	}
+	return conn.(*gojenkins.Jenkins), nil
+}
 
+var connectCached = plugin.HydrateFunc(connectUncached).Memoize()
+
+func connectUncached(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (any, error) {
 	jenkinsConfig := GetConfig(d.Connection)
 
 	var url, userId, apiToken string
@@ -42,12 +46,5 @@ func Connect(ctx context.Context, d *plugin.QueryData) (*gojenkins.Jenkins, erro
 	// 	return nil, "Missing credentials"
 	// }
 
-	client, err := gojenkins.CreateJenkins(nil, url, userId, apiToken).Init(ctx)
-	if err != nil {
-		return nil, err
-	}
-	// Save session into cache
-	d.ConnectionManager.Cache.Set(sessionCacheKey, client)
-	return client, err
-
+	return gojenkins.CreateJenkins(nil, url, userId, apiToken).Init(ctx)
 }
