@@ -4,9 +4,9 @@ import (
 	"context"
 	"strings"
 
-	"github.com/turbot/steampipe-plugin-sdk/v4/grpc/proto"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin/transform"
+	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
 )
 
 //// TABLE DEFINITION
@@ -68,7 +68,7 @@ func listJenkinsNodes(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydrat
 		d.StreamListItem(ctx, node.Raw)
 
 		// Context can be cancelled due to manual cancellation or the limit has been hit
-		if d.QueryStatus.RowsRemaining(ctx) == 0 {
+		if d.RowsRemaining(ctx) == 0 {
 			return nil, nil
 		}
 	}
@@ -81,7 +81,7 @@ func listJenkinsNodes(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydrat
 func getJenkinsNode(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
 	logger.Trace("jenkins_node.getJenkinsNode")
-	nodeName := d.KeyColumnQuals["display_name"].GetStringValue()
+	nodeName := d.EqualsQualString("display_name")
 
 	// Empty check for nodeName
 	if nodeName == "" {

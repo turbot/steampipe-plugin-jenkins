@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/bndr/gojenkins"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
 )
 
 func Connect(ctx context.Context, d *plugin.QueryData) (*gojenkins.Jenkins, error) {

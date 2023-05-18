@@ -2,11 +2,12 @@ package jenkins
 
 import (
 	"context"
+	"strconv"
 	"strings"
 
-	"github.com/turbot/steampipe-plugin-sdk/v4/grpc/proto"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin"
-	"github.com/turbot/steampipe-plugin-sdk/v4/plugin/transform"
+	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
 )
 
 //// TABLE DEFINITION
@@ -63,7 +64,7 @@ func tableJenkinsBuild() *plugin.Table {
 
 func listJenkinsBuilds(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
-	jobFullName := d.KeyColumnQuals["job_full_name"].GetStringValue()
+	jobFullName := d.EqualsQualString("job_full_name")
 
 	// Empty check for jobFullName
 	if jobFullName == "" {
@@ -104,7 +105,7 @@ func listJenkinsBuilds(ctx context.Context, d *plugin.QueryData, h *plugin.Hydra
 		d.StreamListItem(ctx, buildMap)
 
 		// Context can be cancelled due to manual cancellation or the limit has been hit
-		if d.QueryStatus.RowsRemaining(ctx) == 0 {
+		if d.RowsRemaining(ctx) == 0 {
 			return nil, nil
 		}
 	}
@@ -117,14 +118,18 @@ func listJenkinsBuilds(ctx context.Context, d *plugin.QueryData, h *plugin.Hydra
 func getJenkinsBuild(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
 	logger.Trace("jenkins_build.getJenkinsBuild")
-	jobFullName := d.KeyColumnQuals["job_full_name"].GetStringValue()
+	jobFullName := d.EqualsQualString("job_full_name")
 
 	// Empty check for jobFullName
 	if jobFullName == "" {
 		return nil, nil
 	}
 
-	buildNumber := d.KeyColumnQuals["number"].GetInt64Value()
+	buildNumberQual := d.EqualsQualString("number")
+	buildNumber, err := strconv.ParseInt(buildNumberQual, 10, 64)
+	if err != nil {
+		return nil, err
+	}
 
 	// Empty check for buildNumber
 	if buildNumber == 0 {
