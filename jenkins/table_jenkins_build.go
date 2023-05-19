@@ -128,7 +128,7 @@ func getJenkinsBuild(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrate
 	buildNumberQual := d.EqualsQualString("number")
 	buildNumber, err := strconv.ParseInt(buildNumberQual, 10, 64)
 	if err != nil {
-		return nil, err
+		buildNumber = 0
 	}
 
 	// Empty check for buildNumber
