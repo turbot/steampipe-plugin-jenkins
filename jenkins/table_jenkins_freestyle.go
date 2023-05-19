@@ -71,7 +71,7 @@ func listJenkinsFreestyles(ctx context.Context, d *plugin.QueryData, h *plugin.H
 
 	freestyles, err := folder.GetInnerJobs(ctx)
 	if err != nil {
-		logger.Error("jenkins_freestyle.listJenkinsFreestyles", "list_freestyles_error", err)
+		logger.Error("jenkins_freestyle.listJenkinsFreestyles", "query_error", err)
 		if strings.Contains(err.Error(), "Not found") {
 			return nil, nil
 		}
@@ -118,7 +118,7 @@ func getJenkinsFreestyle(ctx context.Context, d *plugin.QueryData, h *plugin.Hyd
 
 	freestyle, err := client.GetJob(ctx, freestyleName, freestyleParentNames...)
 	if err != nil {
-		logger.Error("jenkins_freestyle.getJenkinsFreestyle", "get_freestyle_error", err)
+		logger.Error("jenkins_freestyle.getJenkinsFreestyle", "query_error", err)
 		return nil, err
 	}
 

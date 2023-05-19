@@ -83,13 +83,13 @@ func listJenkinsBuilds(ctx context.Context, d *plugin.QueryData, h *plugin.Hydra
 
 	job, err := client.GetJob(ctx, jobName, jobParentNames...)
 	if err != nil {
-		logger.Error("jenkins_build.listJenkinsBuilds", "get_job_error", err)
+		logger.Error("jenkins_build.listJenkinsBuilds", "get_job", "query_error", err)
 		return nil, err
 	}
 
 	builds, err := job.GetAllBuildIds(ctx)
 	if err != nil {
-		logger.Error("jenkins_build.listJenkinsBuilds", "list_builds_error", err)
+		logger.Error("jenkins_build.listJenkinsBuilds", "list_builds", "query_error", err)
 		if strings.Contains(err.Error(), "Not found") {
 			return nil, nil
 		}
@@ -151,13 +151,13 @@ func getJenkinsBuild(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrate
 
 	job, err := client.GetJob(ctx, jobName, jobParentNames...)
 	if err != nil {
-		logger.Error("jenkins_build.listJenkinsBuilds", "get_job_error", err)
+		logger.Error("jenkins_build.listJenkinsBuilds", "get_job", "query_error", err)
 		return nil, err
 	}
 
 	build, err := job.GetBuild(ctx, buildNumber)
 	if err != nil {
-		logger.Error("jenkins_build.getJenkinsBuild", "get_build_error", err)
+		logger.Error("jenkins_build.getJenkinsBuild", "get_build", "query_error", err)
 		return nil, err
 	}
 

@@ -115,7 +115,7 @@ func getJenkinsPipeline(ctx context.Context, d *plugin.QueryData, h *plugin.Hydr
 
 	pipeline, err := client.GetJob(ctx, pipelineName, pipelineParentNames...)
 	if err != nil {
-		logger.Error("jenkins_pipeline.getJenkinsPipeline", "get_pipeline_error", err)
+		logger.Error("jenkins_pipeline.getJenkinsPipeline", "query_error", err)
 		return nil, err
 	}
 

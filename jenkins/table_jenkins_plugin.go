@@ -52,7 +52,7 @@ func listJenkinsPlugins(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydr
 
 	plugins, err := client.GetPlugins(ctx, 10)
 	if err != nil {
-		logger.Error("jenkins_plugin.listJenkinsPlugins", "list_plugins_error", err)
+		logger.Error("jenkins_plugin.listJenkinsPlugins", "query_error", err)
 		if strings.Contains(err.Error(), "Not found") {
 			return nil, nil
 		}

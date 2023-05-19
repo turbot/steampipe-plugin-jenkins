@@ -57,7 +57,7 @@ func listJenkinsNodes(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydrat
 
 	nodes, err := client.GetAllNodes(ctx)
 	if err != nil {
-		logger.Error("jenkins_node.listJenkinsNodes", "list_nodes_error", err)
+		logger.Error("jenkins_node.listJenkinsNodes", "query_error", err)
 		if strings.Contains(err.Error(), "Not found") {
 			return nil, nil
 		}
@@ -96,7 +96,7 @@ func getJenkinsNode(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateD
 
 	node, err := client.GetNode(ctx, nodeName)
 	if err != nil {
-		logger.Error("jenkins_node.getJenkinsNode", "get_node_error", err)
+		logger.Error("jenkins_node.getJenkinsNode", "query_error", err)
 		return nil, err
 	}
 

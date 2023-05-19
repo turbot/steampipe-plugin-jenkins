@@ -140,7 +140,7 @@ func getJenkinsFolder(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrat
 
 	folder, err := client.GetJob(ctx, folderName, folderParentNames...)
 	if err != nil {
-		logger.Error("jenkins_folder.getJenkinsFolder", "get_folder_error", err)
+		logger.Error("jenkins_folder.getJenkinsFolder", "query_error", err)
 		return nil, err
 	}
 
