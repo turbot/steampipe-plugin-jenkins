@@ -11,13 +11,46 @@ Use SQL to query jobs, builds, nodes, plugin and more from Jenkins.
 
 ## Quick start
 
-Install the plugin with [Steampipe](https://steampipe.io):
+### Install
 
-```shell
+Download and install the latest Steampipe plugin:
+
+```bash
 steampipe plugin install jenkins
 ```
 
-Run a query:
+Configure your [credentials](https://hub.steampipe.io/plugins/turbot/jenkins#credentials) and [config file](https://hub.steampipe.io/plugins/turbot/jenkins#configuration).
+
+Configure your account details in `~/.steampipe/config/jenkins.spc`:
+
+```hcl
+connection "jenkins" {
+  plugin = "jenkins"
+
+  # Your Jenkins instance URL
+  url = "https://ci-cd.internal.my-company.com"
+
+  # Authentication information
+  user_id = "admin"
+  api_token = "116af6f5cf749f31410983860c692850a2"
+}
+```
+
+Or through environment variables:
+
+```sh
+export JENKINS_URL=https://ci-cd.internal.my-company.com
+export JENKINS_USER_ID=admin
+export JENKINS_API_TOKEN=116af6f5cf749f31410983860c692850a2
+```
+
+Run steampipe:
+
+```shell
+steampipe query
+```
+
+List FreeStyle jobs on your Jenkins instance:
 
 ```sql
 select
@@ -27,6 +60,16 @@ select
   last_completed_build  ->> 'URL' as last_completed_build
 from
   jenkins_freestyle;
+```
+
+```
++----------+----------------------+----------+---------------------------------------------------------+
+| color    | name                 | in_queue | last_completed_build                                    |
++----------+----------------------+----------+---------------------------------------------------------+
+| blue     | stage-deploy         | false    | https://ci-cd.mycorp.com/job/stage-deploy/350/          |
+| red      | build-and-unit-test  | true     | https://ci-cd.mycorp.com/job/build-and-unit-test/245/   |
+| notbuilt | production-deploy    | true     |                                                         |
++----------+----------------------+----------+---------------------------------------------------------+
 ```
 
 ## Developing
