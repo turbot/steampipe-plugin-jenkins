@@ -22,6 +22,7 @@ func Plugin(ctx context.Context) *plugin.Plugin {
 			"jenkins_build":     tableJenkinsBuild(),
 			"jenkins_folder":    tableJenkinsFolder(),
 			"jenkins_freestyle": tableJenkinsFreestyle(),
+			"jenkins_job":       tableJenkinsJob(),
 			"jenkins_node":      tableJenkinsNode(),
 			"jenkins_pipeline":  tableJenkinsPipeline(),
 			"jenkins_plugin":    tableJenkinsPlugin(),
