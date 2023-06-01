@@ -28,7 +28,7 @@ from
   jenkins_job m,
   jsonb_array_elements(properties -> 'jobs') as j
 where
-  m.class = 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject'
+  m.class = 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject';
 ```
 
 ### Jobs in queue
