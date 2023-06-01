@@ -4,6 +4,33 @@ A user-configured description of work which Jenkins should perform. This table i
 
 ## Examples
 
+### List Maven projects
+
+```sql
+select
+  full_display_name,
+  url,
+  properties
+from
+  jenkins_job
+where
+  class = 'hudson.maven.MavenModuleSet';
+```
+
+### List child jobs of a Multibranch Pipeline
+
+```sql
+select
+  j ->> 'name' name,
+  j ->> 'color' color,
+  j ->> 'url' url
+from
+  jenkins_job m,
+  jsonb_array_elements(properties -> 'jobs') as j
+where
+  m.class = 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject'
+```
+
 ### Jobs in queue
 
 ```sql
