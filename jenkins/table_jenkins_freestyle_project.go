@@ -13,12 +13,12 @@ import (
 
 //// TABLE DEFINITION
 
-func tableJenkinsFreestyle() *plugin.Table {
+func tableJenkinsFreestyleProject() *plugin.Table {
 	return &plugin.Table{
-		Name:        "jenkins_freestyle",
+		Name:        "jenkins_freestyle_project",
 		Description: "A user-configured description of work which Jenkins should perform, such as building a piece of software, etc.",
 		Get: &plugin.GetConfig{
-			Hydrate:    getJenkinsFreestyle,
+			Hydrate:    getJenkinsFreestyleProject,
 			KeyColumns: plugin.SingleColumn("full_name"),
 			IgnoreConfig: &plugin.IgnoreConfig{
 				ShouldIgnoreErrorFunc: isNotFoundError([]string{"404"}),
@@ -26,7 +26,7 @@ func tableJenkinsFreestyle() *plugin.Table {
 		},
 		List: &plugin.ListConfig{
 			ParentHydrate: listJenkinsFolders,
-			Hydrate:       listJenkinsFreestyles,
+			Hydrate:       listJenkinsFreestyleProjects,
 		},
 
 		Columns: []*plugin.Column{
@@ -64,14 +64,14 @@ func tableJenkinsFreestyle() *plugin.Table {
 
 //// LIST FUNCTION
 
-func listJenkinsFreestyles(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
+func listJenkinsFreestyleProjects(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
 
 	folder := h.Item.(*gojenkins.Job)
 
 	freestyles, err := folder.GetInnerJobs(ctx)
 	if err != nil {
-		logger.Error("jenkins_freestyle.listJenkinsFreestyles", "query_error", err)
+		logger.Error("jenkins_freestyle_project.listJenkinsFreestyleProjects", "query_error", err)
 		if strings.Contains(err.Error(), "Not found") {
 			return nil, nil
 		}
@@ -79,7 +79,7 @@ func listJenkinsFreestyles(ctx context.Context, d *plugin.QueryData, h *plugin.H
 	}
 
 	for _, freestyle := range freestyles {
-		// Filter to Freestyle job type only
+		// Filter to FreestyleProject job type only
 		if freestyle.Raw.Class != "hudson.model.FreeStyleProject" {
 			continue
 		}
@@ -96,9 +96,9 @@ func listJenkinsFreestyles(ctx context.Context, d *plugin.QueryData, h *plugin.H
 
 //// HYDRATE FUNCTION
 
-func getJenkinsFreestyle(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
+func getJenkinsFreestyleProject(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
-	logger.Trace("jenkins_freestyle.getJenkinsFreestyle")
+	logger.Trace("jenkins_freestyle_project.getJenkinsFreestyleProject")
 	freestyleFullName := d.EqualsQualString("full_name")
 
 	// Empty check for freestyleFullName
@@ -108,7 +108,7 @@ func getJenkinsFreestyle(ctx context.Context, d *plugin.QueryData, h *plugin.Hyd
 
 	client, err := Connect(ctx, d)
 	if err != nil {
-		logger.Error("jenkins_freestyle.getJenkinsFreestyle", "connect_error", err)
+		logger.Error("jenkins_freestyle_project.getJenkinsFreestyleProject", "connect_error", err)
 		return nil, err
 	}
 
@@ -118,11 +118,11 @@ func getJenkinsFreestyle(ctx context.Context, d *plugin.QueryData, h *plugin.Hyd
 
 	freestyle, err := client.GetJob(ctx, freestyleName, freestyleParentNames...)
 	if err != nil {
-		logger.Error("jenkins_freestyle.getJenkinsFreestyle", "query_error", err)
+		logger.Error("jenkins_freestyle_project.getJenkinsFreestyleProject", "query_error", err)
 		return nil, err
 	}
 
-	// Filter to Freestyle job type only
+	// Filter to FreestyleProject job type only
 	if freestyle.Raw.Class != "hudson.model.FreeStyleProject" {
 		return nil, nil
 	}
