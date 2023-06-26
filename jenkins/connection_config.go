@@ -6,19 +6,19 @@ import (
 )
 
 type jenkinsConfig struct {
-	Domain   *string `cty:"url"`
-	UserId   *string `cty:"user_id"`
-	ApiToken *string `cty:"api_token"`
+	ServerURL *string `cty:"server_url"`
+	Username  *string `cty:"username"`
+	Password  *string `cty:"password"`
 }
 
 var ConfigSchema = map[string]*schema.Attribute{
-	"url": {
+	"server_url": {
 		Type: schema.TypeString,
 	},
-	"user_id": {
+	"username": {
 		Type: schema.TypeString,
 	},
-	"api_token": {
+	"password": {
 		Type: schema.TypeString,
 	},
 }

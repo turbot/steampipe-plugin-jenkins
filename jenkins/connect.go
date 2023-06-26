@@ -2,6 +2,7 @@ package jenkins
 
 import (
 	"context"
+	"errors"
 	"os"
 
 	"github.com/bndr/gojenkins"
@@ -21,30 +22,30 @@ var connectCached = plugin.HydrateFunc(connectUncached).Memoize()
 func connectUncached(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (any, error) {
 	jenkinsConfig := GetConfig(d.Connection)
 
-	var url, userId, apiToken string
+	var server_url, username, password string
 
-	if jenkinsConfig.Domain != nil {
-		url = *jenkinsConfig.Domain
+	if jenkinsConfig.ServerURL != nil {
+		server_url = *jenkinsConfig.ServerURL
 	} else {
-		url = os.Getenv("JENKINS_URL")
+		server_url = os.Getenv("JENKINS_URL")
 	}
 
-	if jenkinsConfig.UserId != nil {
-		userId = *jenkinsConfig.UserId
+	if jenkinsConfig.Username != nil {
+		username = *jenkinsConfig.Username
 	} else {
-		userId = os.Getenv("JENKINS_USER_ID")
+		username = os.Getenv("JENKINS_USERNAME")
 	}
 
-	if jenkinsConfig.ApiToken != nil {
-		apiToken = *jenkinsConfig.ApiToken
+	if jenkinsConfig.Password != nil {
+		password = *jenkinsConfig.Password
 	} else {
-		apiToken = os.Getenv("JENKINS_API_TOKEN")
+		password = os.Getenv("JENKINS_PASSWORD")
 	}
 
-	// TODO handle the bellow
-	// if url != "" && userId != "" && apiToken != "" {
-	// 	return nil, "Missing credentials"
-	// }
+	// Error if the minimum config is not set
+	if server_url == "" || username == "" || password == "" {
+		return nil, errors.New("'server_url', 'username' and 'password' must be set in the connection configuration. Edit your connection configuration file and then restart Steampipe.")
+	}	
 
-	return gojenkins.CreateJenkins(nil, url, userId, apiToken).Init(ctx)
+	return gojenkins.CreateJenkins(nil, server_url, username, password).Init(ctx)
 }

@@ -28,11 +28,11 @@ connection "jenkins" {
   plugin = "jenkins"
 
   # Your Jenkins instance URL
-  url = "https://ci-cd.internal.my-company.com"
+  server_url = "https://ci-cd.internal.my-company.com"
 
   # Authentication information
-  user_id = "admin"
-  api_token = "116af6f5cf749f31410983860c692850a2"
+  username = "admin"
+  password = "aqt*abc8vcf9abc.ABC"
 }
 ```
 
@@ -40,8 +40,8 @@ Or through environment variables:
 
 ```sh
 export JENKINS_URL=https://ci-cd.internal.my-company.com
-export JENKINS_USER_ID=admin
-export JENKINS_API_TOKEN=116af6f5cf749f31410983860c692850a2
+export JENKINS_USERNAME=admin
+export JENKINS_PASSWORD=aqt*abc8vcf9abc.ABC
 ```
 
 Run steampipe:
@@ -68,7 +68,7 @@ from
 +----------+----------------------+----------+---------------------------------------------------------+
 | blue     | stage-deploy         | false    | https://ci-cd.mycorp.com/job/stage-deploy/350/          |
 | red      | build-and-unit-test  | true     | https://ci-cd.mycorp.com/job/build-and-unit-test/245/   |
-| notbuilt | production-deploy    | true     |                                                         |
+| blue     | production-deploy    | true     | https://ci-cd.mycorp.com/job/build-and-unit-test/241/   |
 +----------+----------------------+----------+---------------------------------------------------------+
 ```
 
