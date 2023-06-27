@@ -50,7 +50,7 @@ where
   job.full_name = 'corp-project/build-and-test';
 ```
 
-### Top 10 freestyle project with most builds
+### Top 10 freestyle projects with most builds
 
 ```sql
 select
@@ -75,7 +75,7 @@ order by
   full_display_name;
 ```
 
-### Freestyle projects that last build failed
+### Freestyle projects where the last build failed
 
 ```sql
 select

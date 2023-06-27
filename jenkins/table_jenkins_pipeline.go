@@ -95,7 +95,7 @@ func listJenkinsPipelines(ctx context.Context, d *plugin.QueryData, h *plugin.Hy
 
 func getJenkinsPipeline(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
-	logger.Trace("jenkins_pipeline.getJenkinsPipeline")
+	logger.Debug("jenkins_pipeline.getJenkinsPipeline")
 	pipelineFullName := d.EqualsQualString("full_name")
 
 	// Empty check for pipelineFullName

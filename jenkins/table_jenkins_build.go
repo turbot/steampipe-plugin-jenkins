@@ -2,7 +2,6 @@ package jenkins
 
 import (
 	"context"
-	"strconv"
 	"strings"
 
 	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
@@ -17,8 +16,12 @@ func tableJenkinsBuild() *plugin.Table {
 		Name:        "jenkins_build",
 		Description: "Result of a single execution of a job",
 		Get: &plugin.GetConfig{
-			Hydrate:    getJenkinsBuild,
-			KeyColumns: plugin.AllColumns([]string{"job_full_name", "number"}),
+			Hydrate: getJenkinsBuild,
+			// KeyColumns: plugin.AllColumns([]string{"job_full_name", "number"}),
+			KeyColumns: []*plugin.KeyColumn{
+				{Name: "job_full_name", Require: plugin.Required},
+				{Name: "number", Require: plugin.Required},
+			},
 			IgnoreConfig: &plugin.IgnoreConfig{
 				ShouldIgnoreErrorFunc: isNotFoundError([]string{"No build found", "404"}),
 			},
@@ -117,26 +120,24 @@ func listJenkinsBuilds(ctx context.Context, d *plugin.QueryData, h *plugin.Hydra
 
 func getJenkinsBuild(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
-	logger.Trace("jenkins_build.getJenkinsBuild")
+	logger.Debug("jenkins_build.getJenkinsBuild")
+
+	var buildNumber int64
 	jobFullName := d.EqualsQualString("job_full_name")
+	if h.Item != nil {
+		buildNumber = h.Item.(map[string]interface{})["Number"].(int64)
+	} else {
+		buildNumber = d.EqualsQuals["number"].GetInt64Value()
+	}
 
 	// Empty check for jobFullName
 	if jobFullName == "" {
 		return nil, nil
 	}
 
-	buildNumberQual := d.EqualsQualString("number")
-	buildNumber, err := strconv.ParseInt(buildNumberQual, 10, 64)
-	if err != nil {
-		buildNumber = 0
-	}
-
 	// Empty check for buildNumber
 	if buildNumber == 0 {
-		buildNumber = h.Item.(map[string]interface{})["Number"].(int64)
-		if buildNumber == 0 {
-			return nil, nil
-		}
+		return nil, nil
 	}
 
 	client, err := Connect(ctx, d)

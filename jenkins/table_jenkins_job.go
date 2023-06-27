@@ -73,7 +73,7 @@ func listJenkinsJobs(ctx context.Context, d *plugin.QueryData, h *plugin.Hydrate
 
 func getJenkinsJob(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
-	logger.Trace("jenkins_job.getJenkinsJob")
+	logger.Debug("jenkins_job.getJenkinsJob")
 	jobFullName := d.EqualsQualString("full_name")
 
 	// Empty check for jobFullName

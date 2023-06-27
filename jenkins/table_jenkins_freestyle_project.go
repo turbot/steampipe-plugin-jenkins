@@ -98,7 +98,7 @@ func listJenkinsFreestyleProjects(ctx context.Context, d *plugin.QueryData, h *p
 
 func getJenkinsFreestyleProject(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
-	logger.Trace("jenkins_freestyle_project.getJenkinsFreestyleProject")
+	logger.Debug("jenkins_freestyle_project.getJenkinsFreestyleProject")
 	freestyleFullName := d.EqualsQualString("full_name")
 
 	// Empty check for freestyleFullName
