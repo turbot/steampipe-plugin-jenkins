@@ -24,7 +24,7 @@ select
   j.full_name as job,
   count(1) as failed_builds
 from
-  jenkins_freestyle as j
+  jenkins_freestyle_project as j
 join
   jenkins_build b
 on

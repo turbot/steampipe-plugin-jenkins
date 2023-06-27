@@ -41,7 +41,7 @@ where
   full_name = 'corp-project/build-and-test-pipeline';
 ```
 
-### How long a pipeline usually takes to run (in seconds)
+### How long a pipeline usually takes to run (in seconds)?
 
 ```sql
 select
@@ -71,7 +71,7 @@ order by
   full_display_name;
 ```
 
-### Pipelines that last build failed
+### Pipelines where the last build failed
 
 ```sql
 select

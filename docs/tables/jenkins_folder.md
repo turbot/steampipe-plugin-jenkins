@@ -18,7 +18,7 @@ join
 on
   true
 join
-  jenkins_freestyle as fs
+  jenkins_freestyle_project as fs
 on
   fs.full_name = folder.full_name || '/' || (job ->> 'name')
 where
@@ -39,7 +39,7 @@ join
 on
   true
 join
-  jenkins_freestyle as fs
+  jenkins_freestyle_project as fs
 on
   fs.full_name = folder.full_name || '/' || (job ->> 'name')
 where
@@ -62,7 +62,7 @@ join
 on
   true
 join
-  jenkins_freestyle as fs
+  jenkins_freestyle_project as fs
 on
   fs.full_name = folder.full_name || '/' || (job ->> 'name')
 where
@@ -82,7 +82,7 @@ join
 on
   true
 join
-  jenkins_freestyle as fs
+  jenkins_freestyle_project as fs
 on
   fs.full_name = folder.full_name || '/' || (job ->> 'name')
 where
@@ -105,7 +105,7 @@ join
 on
   true
 join
-  jenkins_freestyle as fs
+  jenkins_freestyle_project as fs
 on
   fs.full_name = folder.full_name || '/' || (job ->> 'name')
 where

@@ -13,7 +13,7 @@ from
   jenkins_node;
 ```
 
-### Number of nodes in idle
+### Number of idle nodes
 
 ```sql
 select
@@ -24,7 +24,7 @@ where
   idle;
 ```
 
-### Nodes offline
+### Get the offline nodes
 
 ```sql
 select
@@ -37,7 +37,7 @@ where
   offline;
 ```
 
-### Nodes that allows manual launch
+### Nodes that allow manual launch
 
 ```sql
 select
@@ -48,7 +48,7 @@ where
   manual_launch_allowed;
 ```
 
-### Nodes by number of executors
+### Nodes by the number of executors
 
 ```sql
 select
@@ -61,6 +61,7 @@ order by
 ```
 
 ### Number of nodes by OS and architecture type
+
 ```sql
 select
   monitor_data ->> 'hudson.node_monitors.ArchitectureMonitor' as architecture,

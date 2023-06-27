@@ -80,7 +80,7 @@ func listJenkinsNodes(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydrat
 
 func getJenkinsNode(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
-	logger.Trace("jenkins_node.getJenkinsNode")
+	logger.Debug("jenkins_node.getJenkinsNode")
 	nodeName := d.EqualsQualString("display_name")
 
 	// Empty check for nodeName

@@ -115,7 +115,7 @@ func listJenkinsFolders(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydr
 
 func getJenkinsFolder(ctx context.Context, d *plugin.QueryData, h *plugin.HydrateData) (interface{}, error) {
 	logger := plugin.Logger(ctx)
-	logger.Trace("jenkins_folder.getJenkinsFolder")
+	logger.Debug("jenkins_folder.getJenkinsFolder")
 	folderFullName := d.EqualsQualString("full_name")
 
 	// Empty check for folderFullName
