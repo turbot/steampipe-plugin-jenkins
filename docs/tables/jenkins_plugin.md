@@ -4,7 +4,7 @@ An extension to Jenkins functionality provided separately from Jenkins Core.
 
 ## Examples
 
-### Plugins with available update
+### Plugins with updates available
 
 ```sql
 select

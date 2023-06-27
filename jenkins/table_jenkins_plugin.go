@@ -22,7 +22,7 @@ func tableJenkinsPlugin() *plugin.Table {
 
 		Columns: []*plugin.Column{
 			{Name: "active", Type: proto.ColumnType_BOOL, Description: "Boolean to indicate whether the plugin is active."},
-			{Name: "backup_version", Type: proto.ColumnType_JSON, Description: "The backup version of the plugin available for downgrade."},
+			{Name: "backup_version", Type: proto.ColumnType_STRING, Description: "The backup version of the plugin available for downgrade."},
 			{Name: "bundled", Type: proto.ColumnType_BOOL, Description: "Boolean to indicate whether the plugin is bundled with Jenkins in the WAR file."},
 			{Name: "deleted", Type: proto.ColumnType_BOOL, Description: "Boolean to indicate whether the plugin has been deleted."},
 			{Name: "dependencies", Type: proto.ColumnType_JSON, Description: "A list of other plugins this depends on."},
