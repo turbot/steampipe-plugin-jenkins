@@ -97,4 +97,4 @@ export JENKINS_PASSWORD=aqt*abc8vcf9abc.ABC
 ## Get involved
 
 - Open source: https://github.com/turbot/steampipe-plugin-jenkins
-- Community: [Slack Channel](https://steampipe.io/community/join)
+- Community: [Join #steampipe on Slack →](https://turbot.com/community/join)

@@ -6,7 +6,7 @@ Use SQL to query jobs, builds, nodes, plugin and more from Jenkins.
 
 - **[Get started →](https://hub.steampipe.io/plugins/turbot/jenkins)**
 - Documentation: [Table definitions & examples](https://hub.steampipe.io/plugins/turbot/jenkins/tables)
-- Community: [Slack Channel](https://steampipe.io/community/join)
+- Community: [Join #steampipe on Slack →](https://turbot.com/community/join)
 - Get involved: [Issues](https://github.com/turbot/steampipe-plugin-jenkins/issues)
 
 ## Quick start
