@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
 )
 
 //// TABLE DEFINITION
@@ -17,8 +18,8 @@ func tableJenkinsUser() *plugin.Table {
 		},
 
 		Columns: []*plugin.Column{
-			{Name: "FullName", Type: plugin.TypeString, Description: "User's full name."},
-			{Name: "AbsoluteURL", Type: plugin.TypeString, Description: "User's absolute URL."},
+			{Name: "FullName", Type: proto.ColumnType_STRING, Hydrate: getlistJenkinsUsers, Description: "User's full name."},
+			{Name: "AbsoluteURL", Type: proto.ColumnType_STRING, Hydrate: getlistJenkinsUsers, Description: "User's absolute URL."},
 		},
 	}
 }
