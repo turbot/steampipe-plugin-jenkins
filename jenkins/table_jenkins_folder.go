@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/bndr/gojenkins"
+	"github.com/IvenGe/gojenkins"
 	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
 
