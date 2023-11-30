@@ -1,10 +1,20 @@
-# Table: jenkins_job
+---
+title: "Steampipe Table: jenkins_job - Query Jenkins Jobs using SQL"
+description: "Allows users to query Jenkins Jobs, specifically providing details about each job such as its name, description, URL, and build status."
+---
 
-A user-configured description of work which Jenkins should perform. This table is a generic representation of a Jenkins Job.
+# Table: jenkins_job - Query Jenkins Jobs using SQL
+
+Jenkins is an open-source automation server that enables developers to build, test, and deploy their software. It facilitates continuous integration and continuous delivery (CI/CD) by automating parts of the development process, with a focus on testing and deployment. A Jenkins Job is a runnable task that is controlled and monitored by Jenkins.
+
+## Table Usage Guide
+
+The `jenkins_job` table provides insights into Jobs within Jenkins. As a DevOps engineer, explore job-specific details through this table, including job name, description, URL, and build status. Utilize it to monitor the status of various tasks, identify any jobs that may have failed, and verify the details of each job.
 
 ## Examples
 
 ### List Maven projects
+Explore which Jenkins jobs are configured as Maven projects to manage and understand your build process better. This can help streamline your development workflow and troubleshoot potential issues.
 
 ```sql
 select
@@ -18,6 +28,7 @@ where
 ```
 
 ### List child jobs of a Multibranch Pipeline
+Explore the different tasks under a multi-branch pipeline to understand its structure and workflow. This query is useful in identifying the various jobs within a pipeline, their status, and their respective URLs for easy access and management.
 
 ```sql
 select
@@ -32,6 +43,7 @@ where
 ```
 
 ### Jobs in queue
+Discover the segments that are currently in the Jenkins job queue, allowing you to prioritize tasks and manage workflow effectively.
 
 ```sql
 select
@@ -44,6 +56,7 @@ where
 ```
 
 ### Top bad health-scored jobs
+Identify instances where jobs have a poor health score in order to prioritize and address them. This helps in maintaining the overall health and efficiency of the system.
 
 ```sql
 select
@@ -57,6 +70,7 @@ order by
 ```
 
 ### Last successful build of a job
+Uncover the details of the most recent successful build for a job in Jenkins. This can be useful to identify potential issues and improve future builds.
 
 ```sql
 select
@@ -69,6 +83,7 @@ order by
 ```
 
 ### Jobs that last build failed
+Identify instances where the most recent job execution was unsuccessful, enabling you to analyze and rectify the issues causing the failure.
 
 ```sql
 select

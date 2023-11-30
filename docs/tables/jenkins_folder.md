@@ -1,10 +1,20 @@
-# Table: jenkins_folder
+---
+title: "Steampipe Table: jenkins_folder - Query Jenkins Folders using SQL"
+description: "Allows users to query Jenkins Folders, specifically providing insights into the organization and structure of jobs within Jenkins."
+---
 
-A container that stores job projects in it. Unlike view, which is just a filter, a folder creates a separate namespace, so you can have multiple things of the same name as long as they are in different folders.
+# Table: jenkins_folder - Query Jenkins Folders using SQL
+
+Jenkins Folders are a resource within the Jenkins Continuous Integration and Continuous Delivery (CI/CD) server. They allow for the organization and grouping of jobs, creating a hierarchical structure within Jenkins. This is particularly useful in large projects, where managing a large number of jobs can become complex.
+
+## Table Usage Guide
+
+The `jenkins_folder` table provides insights into the organization and structuring of jobs within Jenkins. As a DevOps engineer, explore folder-specific details through this table, including the name, URL, and associated jobs. Utilize it to uncover information about the structure and organization of jobs, helping to manage and navigate large Jenkins projects.
 
 ## Examples
 
 ### Freestyle project jobs in queue of a folder
+Discover the segments that are part of a specific project folder and are queued for execution, providing a way to monitor and manage your pipeline efficiently. This could be particularly useful in large projects where multiple jobs are in queue and prioritization is needed.
 
 ```sql
 select
@@ -27,6 +37,7 @@ where
 ```
 
 ### Number of Freestyle project jobs in queue in each folder
+Explore the distribution of pending tasks across different project categories in a Jenkins environment. This can help optimize task scheduling and resource allocation by identifying areas with high demand.
 
 ```sql
 select
@@ -49,6 +60,7 @@ group by
 ```
 
 ### Top bad health-scored jobs in a folder
+Discover the segments that have the worst health scores within a specific project folder. This is useful to identify areas in need of immediate attention or improvement.
 
 ```sql
 select
@@ -70,6 +82,7 @@ where
 ```
 
 ### Freestyle job's last successful build in a folder
+Explore the last successful build of a freestyle job within a specific project folder. This can help in understanding the project's build history and identifying any potential issues or areas for improvement.
 
 ```sql
 select
@@ -90,6 +103,7 @@ where
 ```
 
 ### Failed freestyle project in a folder
+Determine the health status and details of unsuccessful freestyle projects within a specific Jenkins folder. This aids in identifying problematic areas and taking corrective measures promptly.
 
 ```sql
 select

@@ -1,10 +1,20 @@
-# Table: jenkins_freestyle_project
+---
+title: "Steampipe Table: jenkins_freestyle_project - Query Jenkins Freestyle Projects using SQL"
+description: "Allows users to query Jenkins Freestyle Projects, specifically the project name, description, URL, and build details, providing insights into project configurations and build statuses."
+---
 
-A user-configured description of work which Jenkins should perform, such as building a piece of software, etc.
+# Table: jenkins_freestyle_project - Query Jenkins Freestyle Projects using SQL
+
+Jenkins is an open-source automation server that enables developers to build, test, and deploy their software. It provides numerous plugins to support building, deploying, and automating any project. A Freestyle Project in Jenkins is a type of project that provides maximum flexibility and simplicity for the users. It is the simplest and the most flexible way to design a build, especially when the build process involves several different steps.
+
+## Table Usage Guide
+
+The `jenkins_freestyle_project` table provides insights into Freestyle Projects within Jenkins. As a DevOps engineer, explore project-specific details through this table, including project name, description, URL, and build details. Utilize it to uncover information about projects, such as their configurations, the status of the builds, and the details of the last build.
 
 ## Examples
 
 ### Freestyle project jobs in queue
+Explore which freestyle project jobs are currently in queue to manage your workload and prioritize tasks effectively. This helps in optimizing your project pipeline and ensuring smooth operations.
 
 ```sql
 select
@@ -17,6 +27,7 @@ where
 ```
 
 ### Top bad health-scored freestyle project jobs
+Determine the areas in which freestyle project jobs have poor health scores. This helps prioritize and address issues to improve overall project performance.
 
 ```sql
 select
@@ -30,6 +41,7 @@ order by
 ```
 
 ### Health color of a freestyle project and its downstream projects
+This query helps to assess the health status of a specific project and its related downstream projects in a Jenkins environment. It is particularly useful for monitoring project health in real time, enabling proactive issue detection and resolution.
 
 ```sql
 select
@@ -51,6 +63,7 @@ where
 ```
 
 ### Top 10 freestyle projects with most builds
+Analyze your Jenkins freestyle projects to identify the top ten with the most builds. This can help prioritize maintenance efforts and understand where your resources are most heavily utilized.
 
 ```sql
 select
@@ -64,6 +77,7 @@ limit 10;
 ```
 
 ### Freestyle project's last successful build
+This query helps you identify the last successful build of each freestyle project in your Jenkins environment, which can assist in tracking project progress and ensuring builds are completing successfully. It is particularly useful for maintaining build quality and identifying issues early by pinpointing the projects where the most recent build was successful.
 
 ```sql
 select
@@ -76,6 +90,7 @@ order by
 ```
 
 ### Freestyle projects where the last build failed
+Identify freestyle projects in Jenkins where the most recent build was unsuccessful. This can help in quickly pinpointing problematic projects, allowing for timely troubleshooting and resolution.
 
 ```sql
 select

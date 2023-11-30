@@ -1,10 +1,20 @@
-# Table: jenkins_node
+---
+title: "Steampipe Table: jenkins_node - Query Jenkins Nodes using SQL"
+description: "Allows users to query Jenkins Nodes, specifically detailed information about each node including the name, description, number of executors, labels, and status."
+---
 
-A machine which is part of the Jenkins environment and capable of executing Pipelines or jobs.
+# Table: jenkins_node - Query Jenkins Nodes using SQL
+
+Jenkins Nodes are the worker machines that are part of the Jenkins distributed build system. They are responsible for executing the build jobs dispatched by the master. Each Jenkins Node can have different operating systems and architecture, allowing for diverse build environments.
+
+## Table Usage Guide
+
+The `jenkins_node` table provides insights into Jenkins Nodes within Jenkins distributed build system. As a DevOps engineer, explore node-specific details through this table, including name, description, number of executors, labels, and status. Utilize it to uncover information about nodes, such as those with high executor counts, the labels associated with each node, and the status of each node.
 
 ## Examples
 
 ### Total number of nodes
+Explore the total count of nodes in your Jenkins environment to understand the scale of your build and test infrastructure. This information can be useful for capacity planning and resource allocation.
 
 ```sql
 select
@@ -14,6 +24,7 @@ from
 ```
 
 ### Number of idle nodes
+Explore how many nodes are currently idle in the Jenkins system. This can help in assessing system resource utilization and planning capacity.
 
 ```sql
 select
@@ -25,6 +36,7 @@ where
 ```
 
 ### Get the offline nodes
+Explore which Jenkins nodes are offline and understand the underlying reasons for their status. This can help in identifying issues and implementing appropriate solutions to restore these nodes.
 
 ```sql
 select
@@ -38,6 +50,7 @@ where
 ```
 
 ### Nodes that allow manual launch
+Discover the segments where manual launch is permitted, offering you more control and flexibility in your operations. This can be useful in situations where automated launches may not be ideal or in testing environments.
 
 ```sql
 select
@@ -49,6 +62,7 @@ where
 ```
 
 ### Nodes by the number of executors
+Analyze the settings to understand the distribution of executors across different nodes in a Jenkins environment. This can help in balancing workload and optimizing resource utilization.
 
 ```sql
 select
@@ -61,6 +75,7 @@ order by
 ```
 
 ### Number of nodes by OS and architecture type
+Explore the distribution of nodes by operating system and architecture type, allowing you to understand your system's structure and diversity. This can be particularly useful for planning updates or assessing compatibility requirements.
 
 ```sql
 select
