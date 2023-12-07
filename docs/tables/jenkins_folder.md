@@ -16,7 +16,7 @@ The `jenkins_folder` table provides insights into the organization and structuri
 ### Freestyle project jobs in queue of a folder
 Discover the segments that are part of a specific project folder and are queued for execution, providing a way to monitor and manage your pipeline efficiently. This could be particularly useful in large projects where multiple jobs are in queue and prioritization is needed.
 
-```sql
+```sql+postgres
 select
   folder.full_name,
   fs.full_display_name,
@@ -36,10 +36,27 @@ where
   folder.full_name = 'corp-project';
 ```
 
+```sql+sqlite
+select
+  folder.full_name,
+  fs.full_display_name,
+  fs.url
+from
+  jenkins_folder as folder,
+  json_each(jobs) as job
+join
+  jenkins_freestyle_project as fs
+on
+  fs.full_name = folder.full_name || '/' || json_extract(job.value, '$.name')
+where
+  fs.in_queue and
+  folder.full_name = 'corp-project';
+```
+
 ### Number of Freestyle project jobs in queue in each folder
 Explore the distribution of pending tasks across different project categories in a Jenkins environment. This can help optimize task scheduling and resource allocation by identifying areas with high demand.
 
-```sql
+```sql+postgres
 select
   folder.full_name as folder,
   count(1) as jobs_in_queue
@@ -59,10 +76,27 @@ group by
   folder.full_name;
 ```
 
+```sql+sqlite
+select
+  folder.full_name as folder,
+  count(1) as jobs_in_queue
+from
+  jenkins_folder as folder,
+  json_each(jobs) as job
+join
+  jenkins_freestyle_project as fs
+on
+  fs.full_name = folder.full_name || '/' || json_extract(job.value, '$.name')
+where
+  fs.in_queue
+group by
+  folder.full_name;
+```
+
 ### Top bad health-scored jobs in a folder
 Discover the segments that have the worst health scores within a specific project folder. This is useful to identify areas in need of immediate attention or improvement.
 
-```sql
+```sql+postgres
 select
   fs.health_report -> 0 ->> 'score' as health_report_score,
   fs.full_display_name,
@@ -81,10 +115,26 @@ where
   folder.full_name = 'corp-project';
 ```
 
+```sql+sqlite
+select
+  json_extract(fs.health_report, '$[0].score') as health_report_score,
+  fs.full_display_name,
+  json_extract(fs.health_report, '$[0].description') as health_report_description
+from
+  jenkins_folder as folder,
+  json_each(folder.jobs) as job
+join
+  jenkins_freestyle_project as fs
+on
+  fs.full_name = folder.full_name || '/' || json_extract(job.value, '$.name')
+where
+  folder.full_name = 'corp-project';
+```
+
 ### Freestyle job's last successful build in a folder
 Explore the last successful build of a freestyle job within a specific project folder. This can help in understanding the project's build history and identifying any potential issues or areas for improvement.
 
-```sql
+```sql+postgres
 select
   fs.full_display_name,
   fs.last_successful_build ->> 'URL' as last_successful_build
@@ -102,10 +152,25 @@ where
   folder.full_name = 'corp-project';
 ```
 
+```sql+sqlite
+select
+  fs.full_display_name,
+  json_extract(fs.last_successful_build, '$.URL') as last_successful_build
+from
+  jenkins_folder as folder,
+  json_each(folder.jobs) as job
+join
+  jenkins_freestyle_project as fs
+on
+  fs.full_name = folder.full_name || '/' || json_extract(job.value, '$.name')
+where
+  folder.full_name = 'corp-project';
+```
+
 ### Failed freestyle project in a folder
 Determine the health status and details of unsuccessful freestyle projects within a specific Jenkins folder. This aids in identifying problematic areas and taking corrective measures promptly.
 
-```sql
+```sql+postgres
 select
   fs.full_display_name as job,
   fs.color,
@@ -128,4 +193,8 @@ where
   folder.full_name = 'corp-project'
 order by
   fs.full_display_name;
+```
+
+```sql+sqlite
+Error: The corresponding SQLite query is unavailable. 
 ```

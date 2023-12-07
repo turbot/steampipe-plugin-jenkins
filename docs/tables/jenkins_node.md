@@ -16,7 +16,14 @@ The `jenkins_node` table provides insights into Jenkins Nodes within Jenkins dis
 ### Total number of nodes
 Explore the total count of nodes in your Jenkins environment to understand the scale of your build and test infrastructure. This information can be useful for capacity planning and resource allocation.
 
-```sql
+```sql+postgres
+select
+  count(1) as number_of_nodes
+from
+  jenkins_node;
+```
+
+```sql+sqlite
 select
   count(1) as number_of_nodes
 from
@@ -26,7 +33,7 @@ from
 ### Number of idle nodes
 Explore how many nodes are currently idle in the Jenkins system. This can help in assessing system resource utilization and planning capacity.
 
-```sql
+```sql+postgres
 select
   count(1) as number_of_nodes_in_idle
 from
@@ -35,10 +42,19 @@ where
   idle;
 ```
 
+```sql+sqlite
+select
+  count(1) as number_of_nodes_in_idle
+from
+  jenkins_node
+where
+  idle = 1;
+```
+
 ### Get the offline nodes
 Explore which Jenkins nodes are offline and understand the underlying reasons for their status. This can help in identifying issues and implementing appropriate solutions to restore these nodes.
 
-```sql
+```sql+postgres
 select
   display_name,
   offline_cause,
@@ -49,10 +65,21 @@ where
   offline;
 ```
 
+```sql+sqlite
+select
+  display_name,
+  offline_cause,
+  offline_cause_reason
+from
+  jenkins_node
+where
+  offline = 1;
+```
+
 ### Nodes that allow manual launch
 Discover the segments where manual launch is permitted, offering you more control and flexibility in your operations. This can be useful in situations where automated launches may not be ideal or in testing environments.
 
-```sql
+```sql+postgres
 select
   display_name
 from
@@ -61,10 +88,29 @@ where
   manual_launch_allowed;
 ```
 
+```sql+sqlite
+select
+  display_name
+from
+  jenkins_node
+where
+  manual_launch_allowed = 1;
+```
+
 ### Nodes by the number of executors
 Analyze the settings to understand the distribution of executors across different nodes in a Jenkins environment. This can help in balancing workload and optimizing resource utilization.
 
-```sql
+```sql+postgres
+select
+  display_name,
+  num_executors
+from
+  jenkins_node
+order by
+  num_executors desc;
+```
+
+```sql+sqlite
 select
   display_name,
   num_executors
@@ -77,9 +123,21 @@ order by
 ### Number of nodes by OS and architecture type
 Explore the distribution of nodes by operating system and architecture type, allowing you to understand your system's structure and diversity. This can be particularly useful for planning updates or assessing compatibility requirements.
 
-```sql
+```sql+postgres
 select
   monitor_data ->> 'hudson.node_monitors.ArchitectureMonitor' as architecture,
+  count(1) as nodes
+from
+  jenkins_node
+group by
+  architecture
+order by
+  architecture desc;
+```
+
+```sql+sqlite
+select
+  json_extract(monitor_data, '$.hudson.node_monitors.ArchitectureMonitor') as architecture,
   count(1) as nodes
 from
   jenkins_node
