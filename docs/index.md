@@ -8,6 +8,7 @@ name: "jenkins"
 description: "Steampipe plugin for querying resource jobs, builds, nodes, plugin and more from Jenkins."
 og_description: "Query Jenkins with SQL! Open source CLI. No DB required."
 og_image: "/images/plugins/turbot/jenkins-social-graphic.png"
+engines: ["steampipe", "sqlite", "postgres", "export"]
 ---
 
 # Jenkins + Steampipe
