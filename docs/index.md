@@ -95,7 +95,4 @@ export JENKINS_USERNAME=admin
 export JENKINS_PASSWORD=aqt*abc8vcf9abc.ABC
 ```
 
-## Get involved
 
-- Open source: https://github.com/turbot/steampipe-plugin-jenkins
-- Community: [Join #steampipe on Slack →](https://turbot.com/community/join)
