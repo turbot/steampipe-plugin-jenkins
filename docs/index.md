@@ -8,13 +8,14 @@ name: "jenkins"
 description: "Steampipe plugin for querying resource jobs, builds, nodes, plugin and more from Jenkins."
 og_description: "Query Jenkins with SQL! Open source CLI. No DB required."
 og_image: "/images/plugins/turbot/jenkins-social-graphic.png"
+engines: ["steampipe", "sqlite", "postgres", "export"]
 ---
 
 # Jenkins + Steampipe
 
 [Jenkins](https://www.jenkins.io/) is the leading open source automation server that provides hundreds of plugins to support building, deploying and automating any project.
 
-[Steampipe](https://steampipe.io) is an open source CLI to instantly query cloud APIs using SQL.
+[Steampipe](https://steampipe.io) is an open-source zero-ETL engine to instantly query cloud APIs using SQL.
 
 For example:
 
@@ -94,7 +95,4 @@ export JENKINS_USERNAME=admin
 export JENKINS_PASSWORD=aqt*abc8vcf9abc.ABC
 ```
 
-## Get involved
 
-- Open source: https://github.com/turbot/steampipe-plugin-jenkins
-- Community: [Join #steampipe on Slack →](https://turbot.com/community/join)
