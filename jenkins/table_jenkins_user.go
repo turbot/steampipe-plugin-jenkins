@@ -5,6 +5,7 @@ import (
 
 	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v5/plugin/transform"
 )
 
 //// TABLE DEFINITION
@@ -14,19 +15,19 @@ func tableJenkinsUser() *plugin.Table {
 		Name:        "jenkins_user",
 		Description: "An extension to Jenkins functionality provided separately from Jenkins Core.",
 		List: &plugin.ListConfig{
-			Hydrate: getlistJenkinsUsers,
+			Hydrate: listJenkinsUsers,
 		},
 
 		Columns: []*plugin.Column{
-			{Name: "FullName", Type: proto.ColumnType_STRING, Hydrate: getlistJenkinsUsers, Description: "User's full name."},
-			{Name: "AbsoluteURL", Type: proto.ColumnType_STRING, Hydrate: getlistJenkinsUsers, Description: "User's absolute URL."},
+			{Name: "full_name", Type: proto.ColumnType_STRING, Hydrate: listJenkinsUsers, Description: "User's full name."},
+			{Name: "absolute_url", Type: proto.ColumnType_STRING, Hydrate: listJenkinsUsers, Transform: transform.FromField("AbsoluteURL"), Description: "User's absolute URL."},
 		},
 	}
 }
 
 //// LIST FUNCTION
 
-func getlistJenkinsUsers(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
+func listJenkinsUsers(ctx context.Context, d *plugin.QueryData, _ *plugin.HydrateData) (interface{}, error) {
 	client, err := Connect(ctx, d)
 	if err != nil {
 		return nil, err
