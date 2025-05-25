@@ -5,7 +5,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/bndr/gojenkins"
+	"github.com/IvenGe/gojenkins"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
 )
 
@@ -45,7 +45,7 @@ func connectUncached(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydrate
 	// Error if the minimum config is not set
 	if server_url == "" || username == "" || password == "" {
 		return nil, errors.New("'server_url', 'username' and 'password' must be set in the connection configuration. Edit your connection configuration file and then restart Steampipe.")
-	}	
+	}
 
 	return gojenkins.CreateJenkins(nil, server_url, username, password).Init(ctx)
 }
