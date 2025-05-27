@@ -5,7 +5,8 @@ go 1.23.1
 toolchain go1.23.2
 
 require (
-	github.com/bndr/gojenkins v1.1.0
+
+	github.com/IvenGe/gojenkins v1.1.4
 	github.com/turbot/steampipe-plugin-sdk/v5 v5.11.5
 )
 
