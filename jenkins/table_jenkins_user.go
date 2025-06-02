@@ -2,6 +2,7 @@ package jenkins
 
 import (
 	"context"
+	"time"
 
 	"github.com/turbot/steampipe-plugin-sdk/v5/grpc/proto"
 	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
@@ -21,6 +22,8 @@ func tableJenkinsUser() *plugin.Table {
 		Columns: []*plugin.Column{
 			{Name: "full_name", Type: proto.ColumnType_STRING, Hydrate: listJenkinsUsers, Description: "User's full name."},
 			{Name: "absolute_url", Type: proto.ColumnType_STRING, Hydrate: listJenkinsUsers, Transform: transform.FromField("AbsoluteURL"), Description: "User's absolute URL."},
+			{Name: "last_change", Type: proto.ColumnType_TIMESTAMP, Hydrate: listJenkinsUsers, Transform: transform.FromField("LastChange"), Description: "User's last change."},
+			{Name: "project", Type: proto.ColumnType_STRING, Hydrate: listJenkinsUsers, Description: "User's project."},
 		},
 	}
 }
@@ -37,9 +40,12 @@ func listJenkinsUsers(ctx context.Context, d *plugin.QueryData, _ *plugin.Hydrat
 		return nil, err
 	}
 	for _, user := range users.Raw.Users {
+		lastChange := time.UnixMilli(user.LastChange)
 		d.StreamListItem(ctx, map[string]interface{}{
 			"FullName":    user.User.FullName,
 			"AbsoluteURL": user.User.AbsoluteURL,
+			"LastChange":  lastChange,
+			"Project":     user.Project,
 		})
 	}
 	return nil, nil
