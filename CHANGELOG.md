@@ -1,3 +1,14 @@
+## v1.2.0 [2025-06-04]
+
+_What's new?_
+
+- New tables added
+  - [jenkins_user](https://hub.steampipe.io/plugins/turbot/jenkins/tables/jenkins_user) (Thanks [@codenio](https://github.com/codenio) for the contribution!)
+
+_Dependencies_
+
+- Recompiled plugin with [steampipe-plugin-sdk v5.11.6](https://github.com/turbot/steampipe-plugin-sdk/blob/develop/CHANGELOG.md#v5116-2025-05-22) which improves how errors are handled during query execution.
+
 ## v1.1.1 [2025-04-18]
 
 _Bug fixes_
