@@ -1,7 +1,7 @@
 package jenkins
 
 import (
-	"github.com/turbot/steampipe-plugin-sdk/v5/plugin"
+	"github.com/turbot/steampipe-plugin-sdk/v6/plugin"
 )
 
 type jenkinsConfig struct {
@@ -16,9 +16,9 @@ func ConfigInstance() interface{} {
 
 // GetConfig :: retrieve and cast connection config from query data
 func GetConfig(connection *plugin.Connection) jenkinsConfig {
-	if connection == nil || connection.Config == nil {
+	if connection == nil || connection.GetConfig() == nil {
 		return jenkinsConfig{}
 	}
-	config, _ := connection.Config.(jenkinsConfig)
+	config, _ := connection.GetConfig().(jenkinsConfig)
 	return config
 }
